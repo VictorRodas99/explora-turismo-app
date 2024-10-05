@@ -8,7 +8,10 @@ import {
 
 export const GET: APIRoute = async ({ url }) => {
   const page = Number(url.searchParams.get('page')) ?? 1
-  const limit = Number(url.searchParams.get('limit')) ?? 6
+
+  const limitFromParam = Number(url.searchParams.get('limit'))
+  const limit =
+    Number.isNaN(limitFromParam) || limitFromParam <= 0 ? 6 : limitFromParam
 
   if (Number.isNaN(page)) {
     return createErrorResponse({

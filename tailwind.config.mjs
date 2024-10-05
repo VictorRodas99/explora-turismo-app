@@ -1,4 +1,18 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
+import defaultColors from 'tailwindcss/colors'
+
+/* As of Tailwind CSS v2.2, certain colors has been renamed  */
+const deprecatedColors = [
+  'lightBlue',
+  'warmGray',
+  'coolGray',
+  'blueGray',
+  'trueGray'
+]
+
+for (const color of deprecatedColors) {
+  delete defaultColors[color]
+}
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -11,12 +25,12 @@ export default {
       }
     },
     colors: {
-      ...defaultTheme.colors,
       'soft-white': '#fbfbfe',
-      primary: '#2f27ce',
+      primary: '#34b754',
       secondary: '#dddbff',
-      accent: '#443dff',
-      'primary-text': '#050315'
+      accent: '#196735',
+      'primary-text': '#050315',
+      ...defaultColors
     }
   },
   plugins: []

@@ -1,10 +1,53 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import ArrowRight from '../components/icons/arrow-right'
+import Layout from '../layouts/layout.astro'
+import Hero from '../components/hero.astro'
+import { GET } from './api/distritos/index'
+import { API_STATES } from './api/_states'
+import type { Distrito } from '../types'
+import { Image } from 'astro:assets'
+
+const response = await GET(Astro)
+const { statusText, data: apiResponse } = await response.json()
+
+const distritos =
+  statusText === API_STATES.error ? null : (apiResponse.data as Distrito[])
 ---
 
 <Layout title="Welcome to Astro.">
-	<main>
-		<h1 class="font-outift">Hello</h1>
+	<main class="flex flex-col gap-12">
+		<Hero />
+		<section class="flex flex-col gap-12 justify-center items-center w-full">
+			{!distritos ? (<h2>Sin Distritos a mostrar</h2>) : (
+				<h2 class="text-3xl font-bold font-outift">Distritos</h2>
+				<div class="grid grid-cols-3 gap-5">
+					{distritos?.map((distrito) => (
+						<div class="bg-white shadow-lg border rounded-lg max-w-[300px] overflow-hidden">
+							<header class="relative w-[300px] h-[270px] overflow-hidden rounded-t-lg">
+								<Image 
+									class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105 rounded-t-lg" 
+									src={distrito.main_image ?? ''} 
+									alt={distrito.name} 
+									width={300} 
+									height={270}
+								/>
+							</header>
+							<div class="p-4 flex flex-col gap-5">
+								<h5 class="font-bold">{distrito.name}</h5>
+								<p class="text-sm truncate">{distrito.description}</p>
+								<a class="flex gap-2 items-center" href={`/distrito/${distrito.id}`}>
+								Visitar
+								<ArrowRight size={15}/>
+								</a>
+							</div>
+						</div>
+					))}
+				</div>
+			)}
+			<button class="bg-primary border border-primary rounded-lg text-white hover:text-primary hover:bg-transparent p-4">
+				Ver más distritos
+			</button>
+		</section>
 	</main>
 </Layout>
 

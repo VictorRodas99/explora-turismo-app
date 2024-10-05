@@ -1,0 +1,44 @@
+---
+import { getAssetsFromFolder } from '../lib/cloudinary/assets'
+import { getImagesFromResponse } from '../utils/formatter'
+import Gallery from '../components/gallery/index'
+import BackgroundLightOne from '../components/lights/background-light-one'
+
+const response = await getAssetsFromFolder({ folder: 'galeria' })
+const images = getImagesFromResponse(response)
+---
+<div
+  class="absolute top-[-100px] left-[-800px] w-screen h-screen overflow-hidden rounded-full"
+>
+  <BackgroundLightOne />
+</div>
+
+<section class="flex h-[70vh] items-center mt-20">
+  <div class="w-[40%] flex gap-7 flex-col">
+    <h1
+      class="font-outift text-6xl font-bold [text-shadow:_0_1px_1px_rgb(0_0_0_/_40%)] flex flex-col gap-3"
+    >
+      Destino
+      <span class="text-primary">Ñeembucú</span>
+    </h1>
+    <p class="text-pretty leading-6">
+      Explora Ñeembucú: Descubre sus encantos, encuentra alojamientos y vive
+      aventuras inolvidables. Tu guía de viaje en Paraguay.
+    </p>
+    <div class="flex gap-5">
+      <button
+        class="shadow-md text-white border-2 border-primary bg-primary rounded-xl font-bold p-3 transition-all duration-300 ease-in-out hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 active:bg-primary/80"
+      >
+        Descubre
+      </button>
+      <button
+        class="shadow-md text-primary border-2 border-primary bg-transparent rounded-xl font-bold p-3 transition-all duration-300 ease-in-out hover:bg-primary/10 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 active:bg-primary/20"
+      >
+        Acerca de
+      </button>
+    </div>
+  </div>
+  <div class="w-[60%] h-full grid place-items-center">
+    <Gallery images={images} />
+  </div>
+</section>

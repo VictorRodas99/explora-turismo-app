@@ -5,13 +5,16 @@ import {
   createErrorResponse,
   createSucessResponse
 } from '../_utils/create-response'
+import { DEFAULT_API_LIMIT_FOR } from '../_states'
 
 export const GET: APIRoute = async ({ url }) => {
   const page = Number(url.searchParams.get('page')) ?? 1
 
   const limitFromParam = Number(url.searchParams.get('limit'))
   const limit =
-    Number.isNaN(limitFromParam) || limitFromParam <= 0 ? 6 : limitFromParam
+    Number.isNaN(limitFromParam) || limitFromParam <= 0
+      ? DEFAULT_API_LIMIT_FOR.distritos
+      : limitFromParam
 
   if (Number.isNaN(page)) {
     return createErrorResponse({

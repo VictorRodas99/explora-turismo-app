@@ -3,7 +3,7 @@ import { validPathNames } from '../constants'
 export function getWebsitePaths({ pathname }: { pathname: string }) {
   const currentPath = pathname.slice(1)
 
-  return Object.freeze({
+  const paths = {
     home: {
       label: 'Home',
       url: `/${validPathNames.home}`,
@@ -24,5 +24,7 @@ export function getWebsitePaths({ pathname }: { pathname: string }) {
       url: `/${validPathNames.about}`,
       isCurrent: currentPath === validPathNames.about
     }
-  })
+  } as const
+
+  return Object.freeze(paths)
 }

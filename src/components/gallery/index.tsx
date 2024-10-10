@@ -13,14 +13,14 @@ export default function Gallery({ images }: GalleryProps) {
   const displayImages = useMemo(() => images.slice(0, 9), [images])
 
   return (
-    <div className="relative grid grid-cols-2 md:grid-cols-4 gap-3 pt-12 pl-10">
+    <div className="relative grid grid-cols-2 md:grid-cols-4 gap-3 pt-12 md:pl-10">
       {displayImages.map(({ url, assetId }, index) => (
         <div
           key={assetId}
           className={`max-h-[100px]
-              ${index === 0 ? 'absolute top-0 left-0 w-[200px] h-[100px]' : ''}
+              ${index === 0 ? 'hidden md:block absolute top-0 left-0 w-[200px] h-[100px]' : ''}
               ${index === 1 ? 'col-span-2' : ''}
-              ${index === 4 || index === 5 ? 'row-span-2 max-h-[220px]' : ''}
+              ${index === 4 || index === 5 ? 'row-span-2 md:max-h-[220px]' : ''}
               ${index === 6 ? 'col-span-2' : ''}
             `}
         >

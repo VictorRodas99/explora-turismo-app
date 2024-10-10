@@ -19,7 +19,7 @@ export default function Distritos({
 
   return (
     <section className="relative flex flex-col gap-12 justify-center items-center w-full">
-      <div className="absolute w-full h-fit bottom-[-5%] -right-12 rounded-full opacity-30  ">
+      <div className="absolute w-full h-fit md:bottom-[-5%] md:-right-12 rounded-full opacity-30">
         <BackgroundLightOne />
       </div>
 
@@ -28,7 +28,10 @@ export default function Distritos({
       ) : (
         <>
           <h2 className="text-3xl font-bold font-outift">Distritos</h2>
-          <motion.div className="grid grid-cols-3 gap-5" layout>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+            layout
+          >
             {distritos?.map((distrito, index) => (
               <motion.div
                 key={distrito.id}

@@ -1,31 +1,43 @@
 ---
 import SearchIcon from '../components/icons/search'
 import { getWebsitePaths } from '../utils/general'
+import getIconFromPathName from './utils/get-icon-from-pathname'
+import type { PathsWithoutIconsAsEntries } from './utils/get-icon-from-pathname'
 
 const { pathname } = Astro.url
-const paths = getWebsitePaths({ pathname })
+const pathsWithoutIcons = getWebsitePaths({ pathname })
+
+const paths = Object.fromEntries(
+  (Object.entries(pathsWithoutIcons) as PathsWithoutIconsAsEntries).map(
+    ([name, path]) => [
+      name,
+      { ...path, icon: getIconFromPathName(name, pathsWithoutIcons) }
+    ]
+  )
+)
 ---
 
-<header class="w-full fixed left-0 top-0 px-12 pt-7 z-10">
-  <nav class="grid grid-cols-4 place-items-center text-sm">
+<header class="w-full fixed left-0 top-0 px-2  md:px-12 pt-7 z-50">
+  <nav class="flex justify-between items-center md:grid md:grid-cols-4 md:place-items-center text-sm">
     <div></div>
 
     <ul
       id="navigation-container"
-      class="flex gap-5 col-span-2 border-2 border-primary rounded-full p-2 transition-all duration-300"
+      class="flex items-center justify-center gap-2 md:gap-5 md:col-span-2 border-2 border-primary rounded-full p-2 transition-all duration-300"
     >
       {
-        Object.values(paths).map((path) => (
+        Object.values(paths).map(({ icon: Icon, ...path }) => (
           <li>
             <a
               href={path.url}
               class:list={[
-                'p-1 px-2',
+                'p-1 px-2 grid place-items-center truncate',
                 { 'bg-primary text-white rounded-full': path.isCurrent },
                 { 'hover:text-primary transition-colors': !path.isCurrent }
               ]}
             >
-              {path.label}
+              <span class="hidden md:block">{path.label}</span>
+              <span class="md:hidden">{Icon ? <Icon /> : path.label}</span>
             </a>
           </li>
         ))
@@ -61,6 +73,10 @@ const paths = getWebsitePaths({ pathname })
   const searchIcon = document.querySelector('#search-nav') as HTMLButtonElement
 
   window.addEventListener('scroll', () => {
+    if (window.innerWidth < 425) {
+      return
+    }
+
     if (window.scrollY > 0) {
       navigation.classList.add('header-blur')
       searchIcon.classList.add('header-blur')
@@ -68,5 +84,28 @@ const paths = getWebsitePaths({ pathname })
       navigation.classList.remove('header-blur')
       searchIcon.classList.remove('header-blur')
     }
+  })
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 425) {
+      if (window.scrollY > 0) return
+
+      navigation.classList.remove('header-blur')
+      searchIcon.classList.remove('header-blur')
+
+      return
+    }
+
+    navigation.classList.add('header-blur')
+    searchIcon.classList.add('header-blur')
+  })
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth > 425) {
+      return
+    }
+
+    navigation.classList.add('header-blur')
+    searchIcon.classList.add('header-blur')
   })
 </script>

@@ -14,19 +14,19 @@ const images = getImagesFromResponse(response)
   <BackgroundLightOne />
 </div>
 
-<section class="flex h-[70vh] items-center mt-20">
-  <div class="w-[40%] flex gap-7 flex-col">
+<section class="flex flex-col md:flex-row md:h-[70vh] items-center mt-32 md:mt-20">
+  <div class="md:w-[40%] flex gap-7 flex-col">
     <h1
       class="font-outift text-6xl font-bold [text-shadow:_0_1px_1px_rgb(0_0_0_/_40%)] flex flex-col gap-3"
     >
       Destino
       <span class="text-primary">Ñeembucú</span>
     </h1>
-    <p class="text-pretty leading-6">
+    <p class="text-center md:text-start text-pretty leading-6">
       Explora Ñeembucú: Descubre sus encantos, encuentra alojamientos y vive
       aventuras inolvidables. Tu guía de viaje en Paraguay.
     </p>
-    <div class="flex gap-5 z-20">
+    <div class="flex gap-5 z-20 justify-center md:justify-start">
       <button
         class="shadow-md text-white border-2 border-primary bg-primary rounded-xl font-bold p-3 transition-all duration-300 ease-in-out hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 active:bg-primary/80"
       >
@@ -39,7 +39,7 @@ const images = getImagesFromResponse(response)
       </button>
     </div>
   </div>
-  <div class="w-[60%] h-full grid place-items-center">
+  <div class="md:w-[60%] h-full grid place-items-center">
     <Gallery images={images} />
   </div>
 </section>

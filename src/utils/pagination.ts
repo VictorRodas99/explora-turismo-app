@@ -14,7 +14,7 @@ export const getPagination = ({
 }: PaginationParams): PaginationResult => {
   page = page === 0 ? 1 : page
 
-  if (typeof page !== 'number' || !Number.isFinite(page) || page > 1) {
+  if (typeof page !== 'number' || !Number.isFinite(page) || page < 1) {
     throw new Error('page must be a positive number')
   }
 

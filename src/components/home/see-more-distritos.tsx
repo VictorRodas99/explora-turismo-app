@@ -1,9 +1,9 @@
+import { API_STATES, DEFAULT_API_LIMIT_FOR } from '@/pages/api/_states'
+import { truncateText } from '@/utils/formatter'
 import { useRef, useState } from 'react'
-import { API_STATES, DEFAULT_API_LIMIT_FOR } from '../../pages/api/_states'
-import type { Distrito } from '../../types'
+import type { Distrito } from '@/types'
 import { motion } from 'framer-motion'
 import Loader from '../icons/loader'
-import { truncateText } from '../../utils/formatter'
 
 async function fetchMoreDistritos({ page }: { page: number }) {
   if (typeof page !== 'number' || Number.isNaN(page)) {

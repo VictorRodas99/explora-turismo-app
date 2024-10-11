@@ -1,11 +1,11 @@
+import { getPagination } from '@/utils/pagination'
+import { DEFAULT_API_LIMIT_FOR } from '../_states'
+import { supabase } from '@/lib/supabase'
 import type { APIRoute } from 'astro'
-import { supabase } from '../../../lib/supabase'
-import { getPagination } from '../../../utils/pagination'
 import {
   createErrorResponse,
   createSucessResponse
 } from '../_utils/create-response'
-import { DEFAULT_API_LIMIT_FOR } from '../_states'
 
 export const GET: APIRoute = async ({ url }) => {
   const page = Number(url.searchParams.get('page')) ?? 1

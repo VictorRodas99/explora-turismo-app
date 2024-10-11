@@ -1,9 +1,9 @@
-import type { Distrito } from '../../types'
+import BackgroundLightOne from '../lights/background-light-one'
 import SeeMoreDistritosButton from './see-more-distritos'
 import ArrowRight from '../icons/arrow-right'
-import { useState } from 'react'
+import type { Distrito } from '@/types'
 import { motion } from 'framer-motion'
-import BackgroundLightOne from '../lights/background-light-one'
+import { useState } from 'react'
 
 export default function Distritos({
   initialDistritos

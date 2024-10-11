@@ -1,11 +1,11 @@
 ---
-import Layout from '../layouts/layout.astro'
-import Hero from '../components/hero.astro'
-import { GET } from './api/distritos/index'
+import Distritos from '@/components/home/distritos'
+import { GET } from '@/pages/api/distritos/index'
+import { truncateText } from '@/utils/formatter'
+import Layout from '@/layouts/layout.astro'
+import Hero from '@/components/hero.astro'
 import { API_STATES } from './api/_states'
-import type { Distrito } from '../types'
-import Distritos from '../components/home/distritos'
-import { truncateText } from '../utils/formatter'
+import type { Distrito } from '@/types'
 
 const response = await GET(Astro)
 const { statusText, data: apiResponse } = await response.json()

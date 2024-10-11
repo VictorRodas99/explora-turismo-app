@@ -1,5 +1,5 @@
+import type { getWebsitePaths } from '@/utils/general'
 import { House, Bird, Crown } from 'lucide-react'
-import type { getWebsitePaths } from '../../utils/general'
 
 type PathsWithoutIcons = ReturnType<typeof getWebsitePaths>
 type Keys = keyof PathsWithoutIcons

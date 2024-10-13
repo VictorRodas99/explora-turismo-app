@@ -1,8 +1,17 @@
-import Calendar from 'react-calendar'
-import './css/calendar.css'
+import { getParsedEventsDates } from './utils/get-parsed-events-dates'
+import WrongInfoBreadcrumb from '@/components/wrong-info-breadcrumb'
+import QueryClientProvider from '@/context/tanstack-react-query'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { getLocaleDateString } from '@/utils/formatter'
 import { AnimatePresence, motion } from 'framer-motion'
+import { TooltipProvider } from '@/components/tooltip'
+import { useQuery } from '@tanstack/react-query'
+import useCalendar from './hooks/use-calendar'
+import { API_STATES } from '../api/_states'
+import Calendar from 'react-calendar'
+import type { Event } from '@/types'
+import { useMemo } from 'react'
+import './css/_calendar.css'
 
 const variants = {
   enter: (direction: number) => ({
@@ -19,60 +28,89 @@ const variants = {
   })
 }
 
-export default function Events() {
-  const [currentDate, setCurrentDate] = useState(new Date())
+function Events({ distritoId }: { distritoId: number }) {
+  const { isPending, data: response } = useQuery({
+    queryKey: ['data'],
+    queryFn: () =>
+      fetch(`/api/eventos/${distritoId}`).then((response) => response.json())
+  })
 
-  const nextMonth = useMemo(() => {
-    const newDate = new Date(currentDate)
-    newDate.setMonth(currentDate.getMonth() + 1)
+  const {
+    currentDate,
+    nextMonth,
+    handleDateChange,
+    tileClassName,
+    renderTooltipForTile,
+    controls
+  } = useCalendar(new Date())
 
-    return newDate
-  }, [currentDate])
+  const eventsDates = useMemo(() => {
+    if (!response) {
+      return null
+    }
 
-  const [direction, setDirection] = useState(0)
+    const { data: events } = response.data
+    return getParsedEventsDates(events)
+  }, [response])
 
-  const handleDateChange = (newDate: Date) => {
-    setCurrentDate(newDate)
+  if (isPending && !response) {
+    return <p>Cargando...</p>
   }
 
-  const handlePrevClick = () => {
-    setDirection(-1)
+  const { statusText, data: events } = (response?.data as {
+    statusText: string
+    data: Event[] | null
+  }) || { statusText: '', data: null }
 
-    const newDate = new Date(currentDate)
-    newDate.setMonth(currentDate.getMonth() - 1)
-    setCurrentDate(newDate)
+  if (statusText === API_STATES.error) {
+    return null
   }
 
-  const handleNextClick = () => {
-    setDirection(1)
-
-    const newDate = new Date(currentDate)
-    newDate.setMonth(currentDate.getMonth() + 1)
-    setCurrentDate(newDate)
+  if (!events) {
+    return (
+      <>
+        <WrongInfoBreadcrumb>
+          Si esta información es incorrecta.{' '}
+        </WrongInfoBreadcrumb>
+        <h4 className="font-bold text-xl">No hay eventos en esta región</h4>
+      </>
+    )
   }
 
   return (
     <>
       <h4 className="font-bold text-xl">Eventos</h4>
+      <div className="flex flex-col gap-3">
+        {events.map((event) => (
+          <div key={`event-${event.id}`} className="flex flex-col gap-2">
+            <h5 className="font-bold">{event.subject}</h5>
+            <p className="text-gray-500 text-sm">
+              {getLocaleDateString(new Date(event.start_date))}
+              {event.end_date &&
+                ` - ${getLocaleDateString(new Date(event.end_date))}`}
+            </p>
+          </div>
+        ))}
+      </div>
       <div className="relative">
         <button
           type="button"
-          onClick={handlePrevClick}
+          onClick={controls.handlePrev}
           className="absolute top-6 p-2 left-2 hover:bg-gray-300 rounded-full transition-colors z-10"
         >
           <ChevronLeft size={18} />
         </button>
         <button
           type="button"
-          onClick={handleNextClick}
+          onClick={controls.handleNext}
           className="absolute top-6 right-2 p-2 hover:bg-gray-300 rounded-full transition-colors z-10"
         >
           <ChevronRight size={18} />
         </button>
-        <AnimatePresence initial={false} custom={direction}>
+        <AnimatePresence initial={false} custom={controls.direction}>
           <motion.div
             key={currentDate.toISOString()}
-            custom={direction}
+            custom={controls.direction}
             variants={variants}
             initial="enter"
             animate="center"
@@ -82,31 +120,61 @@ export default function Events() {
             }}
             className="flex gap-10"
           >
-            <Calendar
-              onChange={(newDate) => handleDateChange(newDate as Date)}
-              value={currentDate}
-              locale="es"
-              nextLabel={null}
-              prevLabel={null}
-              next2Label={null}
-              prev2Label={null}
-              minDetail="month"
-              maxDetail="month"
-            />
-            <Calendar
-              onChange={(newDate) => handleDateChange(newDate as Date)}
-              value={nextMonth}
-              locale="es"
-              nextLabel={null}
-              prevLabel={null}
-              next2Label={null}
-              prev2Label={null}
-              minDetail="month"
-              maxDetail="month"
-            />
+            <TooltipProvider>
+              <Calendar
+                onChange={(newDate) => handleDateChange(newDate as Date)}
+                value={currentDate}
+                activeStartDate={currentDate}
+                locale="es"
+                nextLabel={null}
+                prevLabel={null}
+                next2Label={null}
+                prev2Label={null}
+                minDetail="month"
+                maxDetail="month"
+                tileClassName={({ date, view }) =>
+                  tileClassName({ date, view, eventsDates })
+                }
+                tileContent={({ date, view }) =>
+                  renderTooltipForTile({ date, view, eventsDates })
+                }
+                selectRange={false}
+              />
+              <Calendar
+                onChange={(newDate) => handleDateChange(newDate as Date)}
+                value={nextMonth}
+                activeStartDate={nextMonth}
+                locale="es"
+                nextLabel={null}
+                prevLabel={null}
+                next2Label={null}
+                prev2Label={null}
+                minDetail="month"
+                maxDetail="month"
+                tileClassName={({ date, view }) =>
+                  tileClassName({ date, view, eventsDates })
+                }
+                tileContent={({ date, view }) =>
+                  renderTooltipForTile({ date, view, eventsDates })
+                }
+                selectRange={false}
+              />
+            </TooltipProvider>
           </motion.div>
         </AnimatePresence>
       </div>
     </>
+  )
+}
+
+export default function EventsContainer({
+  distritoId
+}: {
+  distritoId: number
+}) {
+  return (
+    <QueryClientProvider>
+      <Events distritoId={distritoId} />
+    </QueryClientProvider>
   )
 }

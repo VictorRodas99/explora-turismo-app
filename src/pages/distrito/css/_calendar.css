@@ -67,6 +67,24 @@
   background-color: var(--primary);
 }
 
+.react-calendar__tile.range-edge {
+  background-color: #3498db;
+  color: var(--white);
+  overflow: visible;
+}
+
+.react-calendar__tile.in-range {
+  border: 1px solid;
+  border-color: var(--gray);
+  overflow: visible;
+}
+
+.react-calendar__tile.single-date {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
 .react-calendar__month-view__days__day--neighboringMonth {
   color: var(--gray);
 }

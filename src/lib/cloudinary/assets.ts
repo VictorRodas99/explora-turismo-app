@@ -1,7 +1,29 @@
 import { v2 as cloudinary } from 'cloudinary'
 import type { CloudinaryResponse } from './response'
 
-export async function getAssetsFromFolder({ folder }: { folder: string }) {
+class TimeoutError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'TimeoutError'
+  }
+}
+
+function timeout(ms: number) {
+  return new Promise((_, reject) =>
+    setTimeout(
+      () => reject(new TimeoutError(`Operation timed out after ${ms}ms`)),
+      ms
+    )
+  )
+}
+
+export async function getAssetsFromFolder({
+  folder,
+  timeoutMs = 5000
+}: {
+  folder: string
+  timeoutMs?: number
+}) {
   cloudinary.config({
     cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
     api_key: import.meta.env.CLOUDINARY_API_KEY,
@@ -9,15 +31,33 @@ export async function getAssetsFromFolder({ folder }: { folder: string }) {
   })
 
   try {
-    const result = await cloudinary.search
-      .expression(`folder:${folder}/*`)
-      .sort_by('public_id', 'desc')
-      .max_results(50)
-      .execute()
+    const searchPromise = new Promise<CloudinaryResponse>((resolve, reject) => {
+      cloudinary.search
+        .expression(`folder:${folder}/*`)
+        .sort_by('public_id', 'desc')
+        .max_results(50)
+        .execute()
+        .then(resolve)
+        .catch(reject)
+    })
 
-    return result as CloudinaryResponse
+    const result = await Promise.race([searchPromise, timeout(timeoutMs)])
+
+    return {
+      assets: result as CloudinaryResponse
+    }
   } catch (error) {
-    console.error(error)
-    return null
+    if (error instanceof TimeoutError) {
+      return {
+        assets: null,
+        error: 'timeout'
+      }
+    }
+    console.error('Error in Cloudinary search:', error)
+
+    return {
+      assets: null,
+      error: error instanceof Error ? error.name : 'unknown error'
+    }
   }
 }

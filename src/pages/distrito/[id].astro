@@ -1,0 +1,80 @@
+---
+import { getImagesFromResponse, truncateText } from '@/utils/formatter'
+import { getAssetsFromFolder } from '@/lib/cloudinary/assets'
+import { ChevronRight, Heart, Share } from 'lucide-react'
+import Gallery from '@/components/galleries/specific'
+import Layout from '@/layouts/layout.astro'
+
+import { getDistritoById } from '@/services/server/distritos'
+import { getPointOfInterestByDistrict } from '@/services/server/points-of-interest'
+import { getFilteredInterestPoints } from '@/utils/mappers'
+import { MAINTAINER_EMAIL } from '@/constants'
+import PlacesSection from './_offers'
+import Events from './_events'
+
+const distrito = await getDistritoById(Astro)
+
+if (!distrito) {
+  return Astro.redirect('/404', 404)
+}
+
+const interestPoints = await getPointOfInterestByDistrict(Astro)
+const filteredPoints = getFilteredInterestPoints(interestPoints)
+
+const imagesResponse = await getAssetsFromFolder({ folder: 'galeria' })
+const images = getImagesFromResponse(imagesResponse)
+---
+
+<Layout title={distrito.name}>
+  <main class="flex flex-col gap-12 mt-20 px-20">
+    <section class="flex flex-col gap-7">
+      <div class="w-full flex justify-between">
+        <h1 class="font-outfit text-4xl font-bold">{distrito.name}</h1>
+        <div class="flex gap-3">
+          <button
+            class="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
+          >
+            <Share size={15} />
+            <span class="underline"> Compartir </span>
+          </button>
+          <button
+            class="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
+          >
+            <Heart size={15} />
+            <span class="underline"> Guardar </span>
+          </button>
+        </div>
+      </div>
+      <Gallery images={images?.toReversed() ?? null} />
+    </section>
+    <div class="flex flex-row-reverse gap-10">
+      <aside class="w-[45%]">
+        <h2>ubicación</h2>
+      </aside>
+      <div class="w-[55%]">
+        <section class="flex flex-col gap-7 py-10 border-t border-gray-300">
+          <div class="p-2 bg-gray-100 rounded-lg text-sm">
+            Si alguna información es errónea. <a
+              href=`mailto:${MAINTAINER_EMAIL}?subject=Informe de Error`
+              class="underline font-bold">Contáctenos</a
+            >
+          </div>
+
+          <p>{truncateText(distrito.description, { maxWords: 66 })}</p>
+          <button
+            class="w-fit flex gap-2 items-center text-sm font-bold hover:text-gray-800"
+          >
+            <span class="underline">Mostrar más</span>
+            <ChevronRight size={17} />
+          </button>
+        </section>      
+        <section class="flex flex-col gap-7 py-10 border-t border-gray-300">
+          <PlacesSection filteredPoints={filteredPoints} client:visible />
+        </section>
+        <section class="flex flex-col gap-7 py-10 border-t border-gray-300 overflow-hidden">
+          <Events client:visible />
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>

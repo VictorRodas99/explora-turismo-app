@@ -13,3 +13,5 @@ export type InterestPointDB =
 export interface InterestPoint extends InterestPointDB {
   tipo: InterestPointCategory
 }
+
+export type Event = Database['public']['Tables']['eventos']['Row']

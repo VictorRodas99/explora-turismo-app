@@ -1,8 +1,8 @@
 ---
+import BackgroundLightOne from '../components/lights/background-light-one'
 import { getAssetsFromFolder } from '../lib/cloudinary/assets'
 import { getImagesFromResponse } from '../utils/formatter'
-import Gallery from '../components/gallery/index'
-import BackgroundLightOne from '../components/lights/background-light-one'
+import Gallery from './galleries/hero'
 
 const response = await getAssetsFromFolder({ folder: 'galeria' })
 const images = getImagesFromResponse(response)

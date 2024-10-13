@@ -1,12 +1,23 @@
 import { cn } from '@/utils/cn'
 import type { getImagesFromResponse } from '@/utils/formatter'
 import { Logs } from 'lucide-react'
+import { useEffect } from 'react'
 
 export default function Gallery({
-  images
+  images,
+  retrieveError
 }: {
   images: ReturnType<typeof getImagesFromResponse>
+  retrieveError?: string
 }) {
+  useEffect(() => {
+    if (retrieveError === 'timeout') {
+      console.warn(
+        'El límite de requests que acepta cloudinary por hora ha sido alcanzado'
+      )
+    }
+  }, [retrieveError])
+
   if (!images) {
     // mostrar un vector que represente que no hay imágenes
     return <h2>Sin imágenes</h2>

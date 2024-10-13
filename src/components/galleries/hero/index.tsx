@@ -4,11 +4,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 interface GalleryProps {
   images: ReturnType<typeof getImagesFromResponse>
+  retrieveError?: string
 }
 
 const IMAGE_GALLERY_ID_PREFIX = 'image-gallery'
 
-export default function Gallery({ images }: GalleryProps) {
+export default function Gallery({ images, retrieveError }: GalleryProps) {
   const displayImages = useMemo(() => images?.slice(0, 9) ?? [], [images])
   const [loadedImagesIndexes, setLoadedImagesIndexes] = useState<Set<number>>(
     new Set()
@@ -17,6 +18,14 @@ export default function Gallery({ images }: GalleryProps) {
   const handleImageLoad = useCallback((imageIndex: number) => {
     setLoadedImagesIndexes((prev) => new Set(prev).add(imageIndex))
   }, [])
+
+  useEffect(() => {
+    if (retrieveError === 'timeout') {
+      console.warn(
+        'El límite de requests que acepta cloudinary por hora ha sido alcanzado'
+      )
+    }
+  }, [retrieveError])
 
   /**
    * Se asigna el source y el onload programáticamente porque el onload

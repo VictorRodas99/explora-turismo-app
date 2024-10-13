@@ -20,11 +20,15 @@ const getPlaceTypeLabelFor: Record<
   InterestPointCategoryEnglish,
   (amount: number) => string
 > = {
-  lodging: (amount) => `${amount} lugares de alojamiento`,
-  historical: (amount) => `${amount} zonas históricas`,
-  cinema: (amount) => `${amount} cines`,
-  tourist: (amount) => `${amount} zonas turísticas`,
-  gastronomy: (amount) => `${amount} comedores/restaurantes`,
+  lodging: (amount) =>
+    `${amount} ${amount === 1 ? 'lugar' : 'lugares'} de alojamiento`,
+  historical: (amount) =>
+    `${amount} ${amount === 1 ? 'zona histórica' : 'zonas histórica'}`,
+  cinema: (amount) => `${amount} ${amount === 1 ? 'cine' : 'cines'}`,
+  tourist: (amount) =>
+    `${amount} ${amount === 1 ? 'zona turística' : 'zona turística'}`,
+  gastronomy: (amount) =>
+    `${amount} ${amount === 1 ? 'comedor/restaurante' : 'comedores/restaurantes'}`,
   other: (_amount) => ''
 }
 

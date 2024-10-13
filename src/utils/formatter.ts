@@ -57,3 +57,34 @@ export function truncateText(
 
   return result + (result.length < text.length ? ellipsis : '')
 }
+
+export function getLocaleDateString(date: Date) {
+  if (!(date instanceof Date)) {
+    throw new Error('Given param must be instace of Date')
+  }
+
+  return date.toLocaleDateString('es', {
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+export function transformDateToNextYear(givenDate: string) {
+  const [year, month, day] = givenDate.split('-').map(Number)
+  const inputDate = new Date(year, month - 1, day)
+
+  if (String(inputDate) === 'Invalid Date') {
+    throw new Error('Given param must be a valid string date yy-mm-dd')
+  }
+
+  const currentDate = new Date()
+
+  if (
+    inputDate < currentDate ||
+    inputDate.toDateString() === currentDate.toDateString()
+  ) {
+    inputDate.setFullYear(currentDate.getFullYear() + 1)
+  }
+
+  return inputDate
+}

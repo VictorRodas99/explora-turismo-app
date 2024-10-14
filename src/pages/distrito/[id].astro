@@ -25,6 +25,7 @@ const { assets, error } = await getAssetsFromFolder({ folder: 'galeria' })
 const images = getImagesFromResponse(assets)
 
 const { id } = distrito
+const shortDescription = truncateText(distrito.description, { maxWords: 66 })
 ---
 
 <Layout title={distrito.name}>
@@ -59,19 +60,22 @@ const { id } = distrito
             Si alguna información es errónea.
           </WrongInfoBreadcrumb>
 
-          <p>{truncateText(distrito.description, { maxWords: 66 })}</p>
-          <button
-            class="w-fit flex gap-2 items-center text-sm font-bold hover:text-gray-800"
-          >
-            <span class="underline">Mostrar más</span>
-            <ChevronRight size={17} />
-          </button>
+          <p>{shortDescription}</p>
+          {
+            shortDescription.trim() !== distrito.description.trim() && (
+              <button class="w-fit flex gap-2 items-center text-sm font-bold hover:text-gray-800">
+                <span class="underline">Mostrar más</span>
+                <ChevronRight size={17} />
+              </button>
+            )
+          }
         </section>
+
         <section class="flex flex-col gap-7 py-10 border-t border-gray-300">
           <PlacesSection filteredPoints={filteredPoints} client:visible />
         </section>
         <section
-          class="flex flex-col gap-7 py-10 border-t border-gray-300 overflow-hidden"
+          class="flex flex-col gap-7 py-  10 border-t border-gray-300 overflow-hidden"
         >
           <Events distritoId={id} client:visible />
         </section>

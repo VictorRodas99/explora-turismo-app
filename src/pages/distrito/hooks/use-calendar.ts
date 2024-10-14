@@ -49,7 +49,7 @@ export default function useCalendar(now: Date) {
         const isStart = date.toDateString() === dates.start.toDateString()
         const isEnd =
           dates.end && date.toDateString() === dates.end.toDateString()
-        const isInRange = dates.end && date >= dates.start && date <= dates.end
+        const isInRange = dates.end && date > dates.start && date < dates.end
 
         if (isStart || isEnd) classes.push('range-edge')
         if (isInRange) classes.push('in-range')

@@ -1,8 +1,11 @@
 import { getParsedEventsDates } from './utils/get-parsed-events-dates'
 import WrongInfoBreadcrumb from '@/components/wrong-info-breadcrumb'
 import QueryClientProvider from '@/context/tanstack-react-query'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { getLocaleDateString } from '@/utils/formatter'
+import { ChevronLeft, ChevronRight, PartyPopper } from 'lucide-react'
+import {
+  getLocaleDateString,
+  removeLeadingZeroInMonth
+} from '@/utils/formatter'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TooltipProvider } from '@/components/tooltip'
 import { useQuery } from '@tanstack/react-query'
@@ -12,6 +15,7 @@ import Calendar from 'react-calendar'
 import type { Event } from '@/types'
 import { useMemo } from 'react'
 import './css/_calendar.css'
+import { getRemanentDays } from '@/utils/general'
 
 const variants = {
   enter: (direction: number) => ({
@@ -81,16 +85,33 @@ function Events({ distritoId }: { distritoId: number }) {
     <>
       <h4 className="font-bold text-xl">Eventos</h4>
       <div className="flex flex-col gap-3">
-        {events.map((event) => (
-          <div key={`event-${event.id}`} className="flex flex-col gap-2">
-            <h5 className="font-bold">{event.subject}</h5>
-            <p className="text-gray-500 text-sm">
-              {getLocaleDateString(new Date(event.start_date))}
-              {event.end_date &&
-                ` - ${getLocaleDateString(new Date(event.end_date))}`}
-            </p>
-          </div>
-        ))}
+        {events.map((event) => {
+          const remanentDays = getRemanentDays({
+            from: new Date(),
+            to: new Date(removeLeadingZeroInMonth(event.start_date))
+          })
+
+          return (
+            <div key={`event-${event.id}`} className="flex flex-col gap-2">
+              <h5 className="font-bold">{event.subject}</h5>
+              <div className="flex gap-1">
+                <p className="text-gray-500 text-sm">
+                  {getLocaleDateString(event.start_date)}
+                  {event.end_date &&
+                    ` - ${getLocaleDateString(event.end_date)}`}
+                </p>
+                <p className="text-gray-500 text-sm italic flex gap-1">
+                  <span>({remanentDays === 1 ? 'queda' : 'quedan'}</span>
+                  <span>{remanentDays}</span>
+                  <span className="flex gap-1 items-center">
+                    {remanentDays === 1 ? 'día' : 'días'}){' '}
+                    <PartyPopper size={18} className="text-yellow-500" />
+                  </span>
+                </p>
+              </div>
+            </div>
+          )
+        })}
       </div>
       <div className="relative">
         <button

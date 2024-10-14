@@ -58,12 +58,30 @@ export function truncateText(
   return result + (result.length < text.length ? ellipsis : '')
 }
 
-export function getLocaleDateString(date: Date) {
-  if (!(date instanceof Date)) {
-    throw new Error('Given param must be instace of Date')
+/**
+ * Por alguna razón si no se quita el cero del primer dígito (si es que existe) el new Date()
+ * sobre la fecha sin formatear retorna el día anterior
+ */
+export function removeLeadingZeroInMonth(dateString: string) {
+  const regex = /(\d{4})-0?(\d{1,2})-(\d{2})/
+  return dateString.replace(regex, '$1-$2-$3')
+}
+
+export function getLocaleDateString(date: Date | string) {
+  if (date instanceof Date) {
+    return date.toLocaleDateString('es', {
+      month: 'long',
+      day: 'numeric'
+    })
   }
 
-  return date.toLocaleDateString('es', {
+  const parsedDate = new Date(removeLeadingZeroInMonth(date))
+
+  if (String(parsedDate) === 'Invalid Date') {
+    throw new Error('Param must be a valid date, string or instance of Date')
+  }
+
+  return parsedDate.toLocaleDateString('es', {
     month: 'long',
     day: 'numeric'
   })

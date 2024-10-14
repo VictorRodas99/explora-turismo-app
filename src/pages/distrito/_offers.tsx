@@ -26,7 +26,7 @@ const getPlaceTypeLabelFor: Record<
     `${amount} ${amount === 1 ? 'zona histórica' : 'zonas histórica'}`,
   cinema: (amount) => `${amount} ${amount === 1 ? 'cine' : 'cines'}`,
   tourist: (amount) =>
-    `${amount} ${amount === 1 ? 'zona turística' : 'zona turística'}`,
+    `${amount} ${amount === 1 ? 'zona turística' : 'zonas turísticas'}`,
   gastronomy: (amount) =>
     `${amount} ${amount === 1 ? 'comedor/restaurante' : 'comedores/restaurantes'}`,
   other: (_amount) => ''

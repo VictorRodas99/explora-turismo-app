@@ -1,4 +1,5 @@
 import { validPathNames } from '../constants'
+import { transformDateToNextYear } from './formatter'
 
 export function getWebsitePaths({ pathname }: { pathname: string }) {
   const currentPath = pathname.slice(1)
@@ -27,4 +28,18 @@ export function getWebsitePaths({ pathname }: { pathname: string }) {
   } as const
 
   return Object.freeze(paths)
+}
+
+export function getRemanentDays({ from, to }: { from: Date; to: Date }) {
+  if (to < from) {
+    to = transformDateToNextYear(to.toISOString().split('T').at(0) ?? '')
+  }
+
+  const msFrom = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())
+  const msTo = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+
+  const msDifference = msTo - msFrom
+  const remanentDays = Math.ceil(msDifference / 1000 / 3600 / 24)
+
+  return remanentDays
 }

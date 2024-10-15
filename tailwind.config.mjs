@@ -25,6 +25,20 @@ export default {
       }
     },
     colors: {
+      background: 'hsl(var(--background))',
+      foreground: 'hsl(var(--foreground))',
+      destructive: {
+        DEFAULT: 'hsl(var(--destructive))',
+        foreground: 'hsl(var(--destructive-foreground))'
+      },
+      muted: {
+        DEFAULT: 'hsl(var(--muted))',
+        foreground: 'hsl(var(--muted-foreground))'
+      },
+      popover: {
+        DEFAULT: 'hsl(var(--popover))',
+        foreground: 'hsl(var(--popover-foreground))'
+      },
       'soft-white': '#fbfbfe',
       primary: '#34b754',
       secondary: '#dddbff',
@@ -33,5 +47,5 @@ export default {
       ...defaultColors
     }
   },
-  plugins: []
+  plugins: [require('tailwindcss-animate')]
 }

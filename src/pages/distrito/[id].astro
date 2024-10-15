@@ -11,6 +11,7 @@ import { getFilteredInterestPoints } from '@/utils/mappers'
 import PlacesSection from './_offers'
 import Events from './_events'
 import WrongInfoBreadcrumb from '@/components/wrong-info-breadcrumb'
+import ShowMoreDescription from './_show-more-description-dialog'
 
 const distrito = await getDistritoById(Astro)
 
@@ -29,7 +30,7 @@ const shortDescription = truncateText(distrito.description, { maxWords: 66 })
 ---
 
 <Layout title={distrito.name}>
-  <main class="flex flex-col gap-12 mt-20 px-20">
+  <main class="flex flex-col gap-12 mt-20 py-8 md:py-12 px-32">
     <section class="flex flex-col gap-7">
       <div class="w-full flex justify-between">
         <h1 class="font-outfit text-4xl font-bold">{distrito.name}</h1>
@@ -63,19 +64,16 @@ const shortDescription = truncateText(distrito.description, { maxWords: 66 })
           <p>{shortDescription}</p>
           {
             shortDescription.trim() !== distrito.description.trim() && (
-              <button class="w-fit flex gap-2 items-center text-sm font-bold hover:text-gray-800">
-                <span class="underline">Mostrar más</span>
-                <ChevronRight size={17} />
-              </button>
+              <ShowMoreDescription description={distrito.description} client:visible />
             )
           }
         </section>
 
-        <section class="flex flex-col gap-7 py-10 border-t border-gray-300">
+        <section class="flex flex-col gap-7 py-10 bor der-t border-gray-300">
           <PlacesSection filteredPoints={filteredPoints} client:visible />
         </section>
         <section
-          class="flex flex-col gap-7 py-  10 border-t border-gray-300 overflow-hidden"
+          class="flex flex-col gap-7 py-10 border-t border-gray-300 overflow-hidden"
         >
           <Events distritoId={id} client:visible />
         </section>

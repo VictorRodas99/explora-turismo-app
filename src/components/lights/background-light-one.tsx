@@ -40,7 +40,7 @@ export default function BackgroundLightOne({
           ry="214"
           cx="547.1072662659074"
           cy="550.3750485757874"
-          fill="#2f27ce"
+          fill="#34b754"
         />
       </g>
     </svg>

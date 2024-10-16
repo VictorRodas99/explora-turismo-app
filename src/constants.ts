@@ -15,3 +15,4 @@ export const interestPointCategories = Object.freeze({
 })
 
 export const MAINTAINER_EMAIL = 'fcaunpanalisisturismoapp@gmail.com'
+export const SITE_NAME = 'Destino Ñeembucú'

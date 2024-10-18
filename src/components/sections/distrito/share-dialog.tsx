@@ -12,7 +12,7 @@ import TwitterIcon from '@/components/icons/x-twitter'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/utils/cn'
 import { Copy, Share } from 'lucide-react'
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { WhatsappShare, FacebookShare, TwitterShare } from 'react-share-lite'
 import type { Toast } from '@/hooks/use-toast'
 import copyTextToClipboard from '@/utils/copy-to-clipboard'
@@ -68,7 +68,7 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
           className="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
         >
           <Share size={15} />
-          <span className="underline"> Compartir </span>
+          <span> Compartir </span>
         </button>
       </DialogTrigger>
       <DialogContent>

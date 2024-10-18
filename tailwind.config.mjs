@@ -47,5 +47,5 @@ export default {
       ...defaultColors
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [require('tailwindcss-animate'), require('tailwind-scrollbar')]
 }

@@ -1,8 +1,8 @@
-import {
-  createSucessResponse,
-  createErrorResponse
-} from '@/pages/api/_utils/create-response'
 import { supabase } from '@/lib/supabase'
+import {
+  createErrorResponse,
+  createSucessResponse
+} from '@/pages/api/_utils/create-response'
 import type { APIRoute } from 'astro'
 
 export const GET: APIRoute = async ({ params }) => {
@@ -24,10 +24,10 @@ export const GET: APIRoute = async ({ params }) => {
     })
   }
 
-  const { data: pointsOfInterest, error } = await supabase
-    .from('puntos_de_interes')
-    .select('id, name, description, address_reference, coords, tipo')
-    .eq('distrito_id', parsedId)
+  const { data: images, error } = await supabase
+    .from('puntos_de_interes_imagenes')
+    .select('id, url')
+    .eq('punto_de_interes_id', id)
 
   if (error) {
     console.error(error)
@@ -38,8 +38,15 @@ export const GET: APIRoute = async ({ params }) => {
     })
   }
 
+  if (images.length === 0) {
+    return createSucessResponse({
+      responseStatus: 404,
+      data: null
+    })
+  }
+
   return createSucessResponse({
     responseStatus: 202,
-    data: pointsOfInterest.length === 0 ? null : pointsOfInterest
+    data: images
   })
 }

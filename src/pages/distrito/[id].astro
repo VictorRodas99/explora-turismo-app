@@ -15,6 +15,7 @@ import ShowMoreDescription from './_show-more-description-dialog'
 import { SITE_NAME } from '@/constants'
 import ShareDialog from '@/components/sections/distrito/share-dialog'
 import Points from './_points'
+import MapComponent from '@/components/map'
 
 const [distrito, interestPoints, { assets, error }] = await Promise.all([
   getDistritoById(Astro),
@@ -59,10 +60,14 @@ const shortDescription = truncateText(description, { maxWords: 66 })
     </section>
     <div class="flex flex-row-reverse gap-10">
       <aside class="w-[40%]">
-        <h2>ubicación</h2>
+        <MapComponent
+          coords={distrito.coords}
+          popupName={distrito.name}
+          client:only="react"
+        />
       </aside>
       <div class="w-[60%]">
-        <section class="flex flex-col gap-7 py-10 border-b border-gray-300">
+        <section class="flex flex-col gap-7 py-10 pt-0 border-b border-gray-300">
           <WrongInfoBreadcrumb>
             Si alguna información es errónea.
           </WrongInfoBreadcrumb>
@@ -86,11 +91,13 @@ const shortDescription = truncateText(description, { maxWords: 66 })
               (points) => points.length === 0
             ) ? (
               <>
-                <WrongInfoBreadcrumb>Si creés que esto es erróneo.{' '}</WrongInfoBreadcrumb>
+                <WrongInfoBreadcrumb>
+                  Si creés que esto es erróneo.{' '}
+                </WrongInfoBreadcrumb>
                 <h2 class="font-bold text-lg">
                   Parece que no hay lugares aún...
                 </h2>
-              </B>
+              </>
             ) : (
               <Points filteredPoints={filteredPoints} client:visible />
             )

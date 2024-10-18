@@ -13,7 +13,7 @@ import {
 import { useMemo } from 'react'
 
 interface PlacesSectionProps {
-  filteredPoints: ReturnType<typeof getFilteredInterestPoints>
+  filteredPoints: Awaited<ReturnType<typeof getFilteredInterestPoints>>
 }
 
 const getPlaceTypeLabelFor: Record<

@@ -68,10 +68,10 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
           className="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
         >
           <Share size={15} />
-          <span> Compartir </span>
+          <span className="hidden md:block"> Compartir </span>
         </button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[90%] md:max-w-auto rounded-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Compartí este espacio
@@ -80,7 +80,7 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
         <DialogDescription className="hidden">
           Descrubre {distrito.name}
         </DialogDescription>
-        <ul className="grid grid-cols-2 gap-2 mt-5">
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-5">
           <li className="text-sm">
             <ShareableItem
               variant="button"

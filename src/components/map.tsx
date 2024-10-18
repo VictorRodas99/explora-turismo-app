@@ -16,7 +16,7 @@ export default function MapComponent({ coords, popupName }: MapProps) {
       <h2 className="font-bold text-xl">¿Dónde vas a estar?</h2>
       <div
         id="map"
-        className="w-full h-[400px] z-10 overflow-hidden rounded-lg"
+        className="w-full h-[200px] md:h-[400px] z-10 overflow-hidden rounded-lg"
       />
     </aside>
   )

@@ -1,9 +1,9 @@
 import { cn } from '@/utils/cn'
 import type { getImagesFromResponse } from '@/utils/formatter'
 import { Logs } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import ImageTour from './image-tour'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function Gallery({
   images,
@@ -13,6 +13,12 @@ export default function Gallery({
   retrieveError?: string
 }) {
   const [isOpenImageTour, setisOpenImageTour] = useState(false)
+  const [isMobileWidth, setIsMobileWidth] = useState(window.innerWidth <= 425)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const sliderRef = useRef<HTMLDivElement>(null)
+
+  const [touchStart, setTouchStart] = useState(0)
+  const [touchEnd, setTouchEnd] = useState(0)
 
   useEffect(() => {
     if (retrieveError === 'timeout') {
@@ -22,12 +28,18 @@ export default function Gallery({
     }
   }, [retrieveError])
 
-  if (!images) {
-    // mostrar un vector que represente que no hay imágenes
-    return <h2>Sin imágenes</h2>
-  }
+  useEffect(() => {
+    const checkIfIsMobileWidth = () => {
+      setIsMobileWidth(window.innerWidth <= 425)
+    }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies(isOpenImageTour): We only need to update is isOpenImageTour changes
+    window.addEventListener('resize', checkIfIsMobileWidth)
+
+    return () => {
+      window.removeEventListener('resize', checkIfIsMobileWidth)
+    }
+  }, [])
+
   useEffect(() => {
     const classListMethod = isOpenImageTour
       ? ('add' as const)
@@ -39,53 +51,115 @@ export default function Gallery({
   useEffect(() => {
     const ESCAPE_KEY_NAME = 'Escape'
 
-    window.addEventListener('keyup', (event) => {
-      const { key } = event
-
-      if (isOpenImageTour && key === ESCAPE_KEY_NAME) {
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (isOpenImageTour && event.key === ESCAPE_KEY_NAME) {
         setisOpenImageTour(false)
       }
-    })
+    }
+
+    window.addEventListener('keyup', handleKeyUp)
+
+    return () => {
+      window.removeEventListener('keyup', handleKeyUp)
+    }
   }, [isOpenImageTour])
+
+  if (!images) {
+    return <h2>Sin imágenes</h2>
+  }
+
+  const handleSwipe = () => {
+    if (touchEnd < touchStart) {
+      setCurrentImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))
+    }
+
+    if (touchEnd > touchStart) {
+      setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))
+    }
+  }
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!sliderRef.current) return
+
+    const newTouchStartX = event.changedTouches[0].screenX
+    setTouchStart(newTouchStartX)
+
+    handleSwipe()
+  }
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const newTouchEndX = event.changedTouches[0].screenX
+    setTouchEnd(newTouchEndX)
+
+    handleSwipe()
+  }
 
   return (
     <>
-      <section className="relative grid grid-cols-4 gap-2 rounded-xl overflow-hidden">
-        {images.slice(0, 5).map(({ assetId, url, name }, index) => (
-          <button
-            id={assetId}
-            type="button"
-            key={assetId}
-            className={cn(
-              'max-h-[180px] hover:brightness-75 transition-all focus:outline-none',
-              {
-                'col-span-2 row-span-2 max-h-max': index === 0
-              }
-            )}
-            onClick={() => setisOpenImageTour(true)}
-          >
-            <img
-              src={url}
-              alt={`imagen ${name}`}
-              className="w-full h-full object-cover"
-            />
-          </button>
-        ))}
-        <button
-          type="button"
-          onClick={() => setisOpenImageTour(true)}
-          className="absolute flex gap-2 items-center right-5 bottom-5 bg-primary text-white text-sm px-3 py-2 rounded-lg hover:bg-white hover:text-primary transition-colors"
+      {isMobileWidth ? (
+        <motion.div
+          ref={sliderRef}
+          className="relative w-full h-[180px] overflow-hidden rounded-xl"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          <Logs size={18} />
-        </button>
-      </section>
+          <span className="absolute top-3 right-3 bg-black bg-opacity-50 rounded-full w-fit px-2 py-1 text-white text-xs z-10">
+            {`${currentImageIndex + 1} / ${images.length}`}
+          </span>
+          <motion.div
+            animate={{ x: `-${currentImageIndex * 100}%` }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="flex h-full"
+          >
+            {images.map(({ assetId, url, name }) => (
+              <div key={assetId} className="w-full h-full flex-shrink-0">
+                <img
+                  src={url}
+                  alt={`imagen ${name}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      ) : (
+        <section className="relative grid grid-cols-4 gap-2 rounded-xl overflow-hidden">
+          {images.slice(0, 5).map(({ assetId, url, name }, index) => (
+            <button
+              id={assetId}
+              type="button"
+              key={assetId}
+              className={cn(
+                'max-h-[180px] hover:brightness-75 transition-all focus:outline-none',
+                {
+                  'col-span-2 row-span-2 max-h-max': index === 0
+                }
+              )}
+              onClick={() => setisOpenImageTour(true)}
+            >
+              <img
+                src={url}
+                alt={`imagen ${name}`}
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setisOpenImageTour(true)}
+            className="absolute flex gap-2 items-center right-5 bottom-5 bg-primary text-white text-sm px-3 py-2 rounded-lg hover:bg-white hover:text-primary transition-colors"
+          >
+            <Logs size={18} />
+          </button>
+        </section>
+      )}
       <AnimatePresence>
-        {isOpenImageTour && (
+        {isOpenImageTour && !isMobileWidth ? (
           <ImageTour
             images={images}
             closeCallback={() => setisOpenImageTour(false)}
           />
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   )

@@ -24,7 +24,7 @@ export default function ShowMoreDescription({
           <ChevronRight size={17} />
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[70%] md:max-w-[50%] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-[90%] md:max-w-[50%] max-h-[80vh] overflow-y-auto rounded-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
             Acerca de este Distrito

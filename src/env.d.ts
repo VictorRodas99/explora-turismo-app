@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly CLOUDINARY_API_KEY_SECRET: string
   readonly CLOUDINARY_CLOUD_NAME: string
   readonly CLOUDINARY_API_KEY: string
+  readonly PORT: number
+  readonly DOMAIN_HOST: string
 }
 
 interface ImportMeta {

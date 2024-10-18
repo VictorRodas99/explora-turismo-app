@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ params }) => {
 
   const { data: distrito, error } = await supabase
     .from('distrito')
-    .select('id, name, description, main_image')
+    .select('id, name, description, main_image, coords')
     .eq('id', parsedId)
 
   if (error) {

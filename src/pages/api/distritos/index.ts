@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ url }) => {
 
   const { data, error } = await supabase
     .from('distrito')
-    .select('id, name, description, main_image', { count: 'exact' })
+    .select('id, name, description, main_image, coords', { count: 'exact' })
     .order('id', { ascending: true })
     .range(from, to)
 

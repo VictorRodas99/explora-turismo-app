@@ -1,7 +1,7 @@
 ---
 import { getImagesFromResponse, truncateText } from '@/utils/formatter'
 import { getAssetsFromFolder } from '@/lib/cloudinary/assets'
-import { Heart, Share } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import Gallery from '@/components/galleries/specific'
 import Layout from '@/layouts/layout.astro'
 
@@ -45,11 +45,11 @@ const shortDescription = truncateText(distrito.description, { maxWords: 66 })
             class="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
           >
             <Heart size={15} />
-            <span class="un derline"> Guardar </span>
+            <span> Guardar </span>
           </button>
         </div>
       </div>
-      <Gallery images={images?.toReversed() ?? null} retrieveError={error} />
+      <Gallery images={images?.toReversed() ?? null} retrieveError={error} client:visible />
     </section>
     <div class="flex flex-row-reverse gap-10">
       <aside class="w-[45%]">

@@ -9,5 +9,8 @@ export default defineConfig({
   integrations: [tailwind({ applyBaseStyles: false }), react()],
   devToolbar: { enabled: false },
   output: 'server',
-  adapter: vercel()
+  adapter: vercel(),
+  server: {
+    port: import.meta.env.PORT
+  }
 })

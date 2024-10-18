@@ -1,14 +1,26 @@
 import { interestPointCategories } from '@/constants'
+import getInterestPointsImages from '@/services/client/points-of-interest-images'
 import type {
   InterestPoint,
   InterestPointCategory,
-  InterestPointCategoryEnglish
+  InterestPointCategoryEnglish,
+  InterestPointImage
 } from '@/types'
+
+export type FilteredPoints = Awaited<
+  ReturnType<typeof getFilteredInterestPoints>
+>
+
+const categoryReverseMap = Object.fromEntries(
+  Object.entries(interestPointCategories).map(([key, value]) => [value, key])
+)
 
 export const getInterestPointCategoryInEnglish = (
   typeInSpanish: InterestPointCategory
-) => {
-  if (!Object.values(interestPointCategories).includes(typeInSpanish)) {
+): InterestPointCategoryEnglish => {
+  const englishCategory = categoryReverseMap[typeInSpanish]
+
+  if (!englishCategory) {
     throw new Error(
       `Invalid type, expected ${Object.values(interestPointCategories)
         .map((category) => `"${category}"`)
@@ -16,19 +28,15 @@ export const getInterestPointCategoryInEnglish = (
     )
   }
 
-  const keyIndex = Object.values(interestPointCategories).findIndex(
-    (value) => value === typeInSpanish
-  )
-
-  return Object.keys(interestPointCategories)[
-    keyIndex
-  ] as InterestPointCategoryEnglish
+  return englishCategory as InterestPointCategoryEnglish
 }
 
-export function getFilteredInterestPoints(points: InterestPoint[] | null) {
+export async function getFilteredInterestPoints(
+  points: InterestPoint[] | null
+) {
   const interestPointsCategoriesFiltered: Record<
     InterestPointCategoryEnglish,
-    InterestPoint[]
+    Array<InterestPoint & { images: InterestPointImage[] | null }>
   > = {
     lodging: [],
     tourist: [],
@@ -38,16 +46,25 @@ export function getFilteredInterestPoints(points: InterestPoint[] | null) {
     other: []
   }
 
-  for (const point of points ?? []) {
+  if (!points) return interestPointsCategoriesFiltered
+
+  const imagePromises = points.map((point) =>
+    getInterestPointsImages({ interestPointId: point.id })
+  )
+  const allImages = await Promise.all(imagePromises)
+
+  points.forEach((point, index) => {
     if (!Object.values(interestPointCategories).includes(point.tipo)) {
       console.log(point)
-      continue
+      return
     }
 
     const type = getInterestPointCategoryInEnglish(point.tipo)
-
-    interestPointsCategoriesFiltered[type].push(point)
-  }
+    interestPointsCategoriesFiltered[type].push({
+      ...point,
+      images: allImages[index]
+    })
+  })
 
   return interestPointsCategoriesFiltered
 }

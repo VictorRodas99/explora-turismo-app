@@ -36,18 +36,21 @@ export type Database = {
     Tables: {
       distrito: {
         Row: {
+          coords: number[]
           description: string
           id: number
           main_image: string | null
           name: string
         }
         Insert: {
+          coords: number[]
           description?: string
           id?: number
           main_image?: string | null
           name: string
         }
         Update: {
+          coords?: number[]
           description?: string
           id?: number
           main_image?: string | null
@@ -185,13 +188,6 @@ export type Database = {
             columns: ['punto_de_interes_id']
             isOneToOne: false
             referencedRelation: 'puntos_de_interes'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'puntos_de_interes_comentarios_user_id_fkey'
-            columns: ['user_id']
-            isOneToOne: false
-            referencedRelation: 'users'
             referencedColumns: ['id']
           }
         ]
@@ -350,4 +346,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema['CompositeTypes']
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    : never = never
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
+    ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never

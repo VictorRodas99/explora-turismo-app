@@ -19,6 +19,8 @@ export default function Gallery({
 
   const [initialTouchPoint, setInitialTouchPoint] = useState(0)
   const [endTouchPoint, setEndTouchPoint] = useState(0)
+  const [lastSwipeTime, setLastSwipeTime] = useState(0)
+  const SWIPE_COOLDOWN = 300
 
   useEffect(() => {
     if (retrieveError === 'timeout') {
@@ -69,9 +71,14 @@ export default function Gallery({
   }
 
   const handleSwipe = () => {
+    const currentTime = Date.now()
+    if (currentTime - lastSwipeTime < SWIPE_COOLDOWN) {
+      return
+    }
+
     const difference = initialTouchPoint - endTouchPoint
 
-    if (Math.abs(difference) > 200) {
+    if (Math.abs(difference) > 70) {
       if (difference > 0) {
         setCurrentImageIndex((prev) =>
           prev < images.length - 1 ? prev + 1 : 0
@@ -81,9 +88,9 @@ export default function Gallery({
           prev > 0 ? prev - 1 : images.length - 1
         )
       }
+      setLastSwipeTime(currentTime)
     }
   }
-
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     if (!sliderRef.current) return
 

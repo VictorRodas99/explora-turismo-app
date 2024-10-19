@@ -13,7 +13,7 @@ export default function Gallery({
   retrieveError?: string
 }) {
   const [isOpenImageTour, setisOpenImageTour] = useState(false)
-  const [isMobileWidth, setIsMobileWidth] = useState(window.innerWidth <= 425)
+  const [isMobileWidth, setIsMobileWidth] = useState(window.innerWidth < 768)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const sliderRef = useRef<HTMLDivElement>(null)
 
@@ -30,7 +30,7 @@ export default function Gallery({
 
   useEffect(() => {
     const checkIfIsMobileWidth = () => {
-      setIsMobileWidth(window.innerWidth <= 425)
+      setIsMobileWidth(window.innerWidth < 768)
     }
 
     window.addEventListener('resize', checkIfIsMobileWidth)

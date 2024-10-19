@@ -17,8 +17,8 @@ export default function Gallery({
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const sliderRef = useRef<HTMLDivElement>(null)
 
-  const [touchStart, setTouchStart] = useState(0)
-  const [touchEnd, setTouchEnd] = useState(0)
+  const [initialTouchPoint, setInitialTouchPoint] = useState(0)
+  const [endTouchPoint, setEndTouchPoint] = useState(0)
 
   useEffect(() => {
     if (retrieveError === 'timeout') {
@@ -69,27 +69,33 @@ export default function Gallery({
   }
 
   const handleSwipe = () => {
-    if (touchEnd < touchStart) {
-      setCurrentImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))
-    }
+    const difference = initialTouchPoint - endTouchPoint
 
-    if (touchEnd > touchStart) {
-      setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))
+    if (Math.abs(difference) > 200) {
+      if (difference > 0) {
+        setCurrentImageIndex((prev) =>
+          prev < images.length - 1 ? prev + 1 : 0
+        )
+      } else {
+        setCurrentImageIndex((prev) =>
+          prev > 0 ? prev - 1 : images.length - 1
+        )
+      }
     }
   }
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     if (!sliderRef.current) return
 
-    const newTouchStartX = event.changedTouches[0].screenX
-    setTouchStart(newTouchStartX)
+    const initialTouchPoint = event.touches[0].pageX
+    setInitialTouchPoint(initialTouchPoint)
 
     handleSwipe()
   }
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    const newTouchEndX = event.changedTouches[0].screenX
-    setTouchEnd(newTouchEndX)
+    const endTouchPoint = event.changedTouches[0].pageX
+    setEndTouchPoint(endTouchPoint)
 
     handleSwipe()
   }

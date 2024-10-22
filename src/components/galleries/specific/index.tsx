@@ -66,7 +66,7 @@ export default function Gallery({
     }
   }, [isOpenImageTour])
 
-  if (!images) {
+  if (!images || images.length === 0) {
     return <h2>Sin imágenes</h2>
   }
 
@@ -136,7 +136,12 @@ export default function Gallery({
           </motion.div>
         </motion.div>
       ) : (
-        <section className="relative grid grid-cols-4 gap-2 rounded-xl overflow-hidden">
+        <section
+          className={cn(
+            'relative grid grid-cols-4 gap-2 rounded-xl overflow-hidden max-h-[360px]',
+            { [`grid-cols-${images.length}`]: images.length < 5 }
+          )}
+        >
           {images.slice(0, 5).map(({ assetId, url, name }, index) => (
             <button
               id={assetId}
@@ -145,7 +150,8 @@ export default function Gallery({
               className={cn(
                 'max-h-[180px] hover:brightness-75 transition-all focus:outline-none',
                 {
-                  'col-span-2 row-span-2 max-h-max': index === 0
+                  'col-span-2 row-span-2 max-h-[360px]':
+                    index === 0 && images.length > 3
                 }
               )}
               onClick={() => setisOpenImageTour(true)}

@@ -1,15 +1,8 @@
 import { interestPointCategories } from '@/constants'
 import type { InterestPointCategoryEnglish } from '@/types'
+import getIconForPlaceType from '@/utils/get-icon-for-place-type'
 import type { getFilteredInterestPoints } from '@/utils/mappers'
-import {
-  Amphora,
-  BedDouble,
-  Binoculars,
-  Bird,
-  Popcorn,
-  TicketX,
-  Utensils
-} from 'lucide-react'
+import { TicketX } from 'lucide-react'
 import { useMemo } from 'react'
 
 interface PlacesSectionProps {
@@ -30,22 +23,6 @@ const getPlaceTypeLabelFor: Record<
   gastronomy: (amount) =>
     `${amount} ${amount === 1 ? 'comedor/restaurante' : 'comedores/restaurantes'}`,
   other: (_amount) => ''
-}
-
-const getIconForPlaceType = ({
-  type
-}: {
-  type: InterestPointCategoryEnglish
-}) => {
-  const icons: Record<string, typeof BedDouble> = {
-    lodging: BedDouble,
-    tourist: Binoculars,
-    historical: Amphora,
-    cinema: Popcorn,
-    gastronomy: Utensils
-  }
-
-  return icons[type] ?? Bird
 }
 
 function PlaceItem({

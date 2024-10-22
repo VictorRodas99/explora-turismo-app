@@ -17,3 +17,7 @@ export interface InterestPoint extends InterestPointDB {
 export type Event = Database['public']['Tables']['eventos']['Row']
 export type InterestPointImage =
   Database['public']['Tables']['puntos_de_interes_imagenes']['Row']
+
+export type InterestPointContactsDB =
+  Database['public']['Tables']['puntos_de_interes_contactos']['Row']
+export type InterestPointContacts = Omit<InterestPointContactsDB, 'created_at'>

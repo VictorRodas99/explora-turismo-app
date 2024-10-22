@@ -1,5 +1,6 @@
 ---
 import Header from './header.astro'
+import Footer from './footer.astro'
 
 import '@fontsource/poppins'
 import '@fontsource-variable/outfit'
@@ -61,6 +62,7 @@ const canonicalURL = Astro.site ?? Astro.url
     <Header />
     <slot />
     <Toaster client:only="react" />
+    <Footer />
   </body>
 </html>
 <style is:global></style>

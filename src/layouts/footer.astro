@@ -1,0 +1,89 @@
+---
+import FacebookIcon from '@/components/icons/facebook'
+import InstagramIcon from '@/components/icons/instagram'
+import TwitterIcon from '@/components/icons/x-twitter'
+import LogoFacultad from '@/images/logo-facultad.png'
+import { Image } from 'astro:assets'
+---
+
+<footer class="w-full bg-soft-white border-t border-gray-200 py-8 px-4 md:px-10 lg:px-20 mt-20">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-primary-text mb-4 text-start">
+        Información Institucional
+      </h3>
+      <div class="flex items-center gap-4 mb-6">
+        <Image src={LogoFacultad} alt="Facultad de Ciencias Aplicadas Logo" class="w-10 h-10" />
+        <img src="/favicon-white-theme.png" alt="Destino Ñeembucú Logo" class="w-10 h-10" />
+      </div>
+      <nav class="flex flex-col gap-2">
+        <a href="/acerca-de" class="block text-gray-600 hover:text-primary">
+          Acerca de Nosotros
+        </a>
+        <a href="#" class="block text-gray-600 hover:text-primary">
+          Información Legal y de Seguridad
+        </a>
+        <a href="#" class="block text-gray-600 hover:text-primary">
+          Sobre Nosotros y Políticas
+        </a>
+      </nav>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-primary-text mb-4 text-center">
+        Nuestras Redes Sociales
+      </h3>
+      <div class="flex gap-4 justify-center">
+        <a
+          href="#"
+          class="p-2 border border-gray-300 rounded-lg hover:border-primary transition-colors"
+        >
+          <span class="sr-only">Facebook</span>
+          <FacebookIcon />
+        </a>
+        <a
+          href="#"
+          class="p-2 border border-gray-300 rounded-lg hover:border-primary transition-colors"
+        >
+          <span class="sr-only">Instagram</span>
+          <InstagramIcon />
+        </a>
+        <a
+          href="#"
+          class="p-2 border border-gray-300 rounded-lg hover:border-primary transition-colors"
+        >
+          <span class="sr-only">X (Twitter)</span>
+          <TwitterIcon />
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h3 class="text-lg font-semibold text-primary-text mb-4">Contacto</h3>
+      <div class="w-full">
+        <div class="flex flex-col gap-2 w-fit">
+          <p class="flex items-center text-gray-600 text-end">
+            Correo: <a
+              href="mailto:turismo@aplicadas.edu.py"
+              class="ml-2 text-primary hover:text-accent"
+              >turismo@aplicadas.edu.py</a
+            >
+          </p>
+          <p class="flex items-center text-gray-600 text-end">
+            Celular: <a
+              href="tel:+595974446029"
+              class="ml-2 text-primary hover:text-accent">+595 974 446029</a
+            >
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="mt-8 pt-8 border-t border-gray-200">
+    <p class="text-center text-gray-500 text-sm">
+      Copyright © 2024 Destino Neembucú. Todos los derechos reservados.
+    </p>
+  </div>
+</footer>

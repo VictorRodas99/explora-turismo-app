@@ -1,15 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { truncateText } from '@/utils/formatter'
 import type { FilteredPoints } from '@/utils/mappers'
 import CompleteLogo from '@/images/complete-logo.png'
-import type {
-  InterestPointCategory,
-  InterestPointCategoryEnglish
-} from '@/types'
-import { interestPointCategories } from '@/constants'
+import type { InterestPointCategoryEnglish } from '@/types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { slugify } from '@/utils/formatter'
 
 interface PointsProps {
+  distrito: { id: number; name: string }
   filteredPoints: FilteredPoints
 }
 
@@ -26,12 +24,16 @@ const getSubjectForPointsSection = (type: InterestPointCategoryEnglish) => {
   return subjectsFor[type]
 }
 
-function SpecificPoint({
+export function SpecificPoint({
   places,
-  type
+  type,
+  distrito,
+  subject
 }: {
   places: FilteredPoints[keyof FilteredPoints]
   type: InterestPointCategoryEnglish
+  distrito: { id: number; name: string }
+  subject?: string
 }) {
   const [showLeftButton, setShowLeftButton] = useState(false)
   const [showRightButton, setShowRightButton] = useState(false)
@@ -72,7 +74,9 @@ function SpecificPoint({
 
   return (
     <>
-      <h2 className="font-bold text-xl">{getSubjectForPointsSection(type)}</h2>
+      <h2 className="font-bold text-xl">
+        {subject ?? getSubjectForPointsSection(type)}
+      </h2>
       <div className="relative">
         {showLeftButton && (
           <button
@@ -89,11 +93,12 @@ function SpecificPoint({
           onScroll={handleScroll}
         >
           {places.map((point) => (
-            <div
+            <a
+              href={`/puntos/${point.id}/${slugify(distrito.name)}/${slugify(point.name)}?distrito_id=${distrito.id}`}
               key={`${point.name}-${point.id}`}
-              className="flex flex-col gap-5 min-w-80 h-[250px]"
+              className="flex flex-col gap-5 min-w-80 h-[250px] group"
             >
-              <div className="w-[100%] h-[60%] rounded-lg overflow-hidden">
+              <div className="group-hover:shadow-md w-[100%] h-[60%] rounded-lg overflow-hidden transition-shadow">
                 <img
                   className="w-full h-full object-cover"
                   src={point.images?.at(0)?.url ?? CompleteLogo.src}
@@ -108,7 +113,7 @@ function SpecificPoint({
                   })}
                 </p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
         {showRightButton && (
@@ -125,10 +130,11 @@ function SpecificPoint({
   )
 }
 
-export default function Points({ filteredPoints }: PointsProps) {
+export default function Points({ distrito, filteredPoints }: PointsProps) {
   return Object.entries(filteredPoints).map(([type, points]) => (
     <SpecificPoint
       key={type}
+      distrito={distrito}
       places={points}
       type={type as InterestPointCategoryEnglish}
     />

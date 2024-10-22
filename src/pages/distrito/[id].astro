@@ -1,5 +1,5 @@
 ---
-import { getImagesFromResponse, truncateText } from '@/utils/formatter'
+import { getImagesFromResponse, slugify, truncateText } from '@/utils/formatter'
 import { getAssetsFromFolder } from '@/lib/cloudinary/assets'
 import { Heart } from 'lucide-react'
 import Gallery from '@/components/galleries/specific'
@@ -13,21 +13,26 @@ import Events from './_events'
 import WrongInfoBreadcrumb from '@/components/wrong-info-breadcrumb'
 import ShowMoreDescription from './_show-more-description-dialog'
 import { SITE_NAME } from '@/constants'
-import ShareDialog from '@/components/sections/distrito/share-dialog'
 import Points from './_points'
 import MapComponent from '@/components/map'
+import PlaceHeader from '@/components/place-header.astro'
 
-const [distrito, interestPoints, { assets, error }] = await Promise.all([
+const [distrito, interestPoints] = await Promise.all([
   getDistritoById(Astro),
-  getPointOfInterestByDistrict(Astro),
-  getAssetsFromFolder({ folder: 'galeria' })
+  getPointOfInterestByDistrict(Astro)
 ])
 
 if (!distrito) {
   return Astro.redirect('/404', 404)
 }
 
-const filteredPoints = await getFilteredInterestPoints(interestPoints)
+const [filteredPoints, { assets, error }] = await Promise.all([
+  getFilteredInterestPoints(interestPoints),
+  getAssetsFromFolder({
+    folder: `${slugify(distrito.name)}/galeria`
+  })
+])
+
 const images = getImagesFromResponse(assets)
 
 const { id, name, description } = distrito
@@ -37,25 +42,11 @@ const shortDescription = truncateText(description, { maxWords: 66 })
 <Layout title={`${SITE_NAME} | ${name}`}>
   <main class="flex flex-col gap-12 mt-20 py-8 md:py-12 px-8 md:px-28 lg:px-32">
     <section class="flex flex-col gap-7">
-      <div class="w-full flex justify-between">
-        <h1 class="font-outfit text-4xl font-bold">{name}</h1>
-        <div class="flex gap-3">
-          <ShareDialog
-            distrito={{ image: images?.at(0)?.url, name }}
-            client:only="react"
-          />
-          <button
-            class="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
-          >
-            <Heart size={15} />
-            <span class="hidden md:block"> Guardar </span>
-          </button>
-        </div>
-      </div>
+      <PlaceHeader placeName={name} />
       <Gallery
-        images={images?.toReversed() ?? null}
+        images={images}
         retrieveError={error}
-        client:only='react' 
+        client:only="react"
       />
     </section>
     <div class="flex flex-col md:flex-row-reverse gap-10">
@@ -67,7 +58,9 @@ const shortDescription = truncateText(description, { maxWords: 66 })
         />
       </aside>
       <div class="md:w-[60%]">
-        <section class="flex flex-col gap-7 py-10 pt-0 border-b border-gray-300">
+        <section
+          class="flex flex-col gap-7 py-10 pt-0 border-b border-gray-300"
+        >
           <WrongInfoBreadcrumb>
             Si alguna información es errónea.
           </WrongInfoBreadcrumb>
@@ -99,7 +92,11 @@ const shortDescription = truncateText(description, { maxWords: 66 })
                 </h2>
               </>
             ) : (
-              <Points filteredPoints={filteredPoints} client:visible />
+              <Points
+                filteredPoints={filteredPoints}
+                distrito={{ id, name }}
+                client:visible
+              />
             )
           }
         </section>

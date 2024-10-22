@@ -24,9 +24,9 @@ export const GET: APIRoute = async ({ params }) => {
     })
   }
 
-  const { data: images, error } = await supabase
-    .from('puntos_de_interes_imagenes')
-    .select('id, url, punto_de_interes_id')
+  const { data: contacts, error } = await supabase
+    .from('puntos_de_interes_contactos')
+    .select('id, instagram_user, punto_de_interes_id, phone_number')
     .eq('punto_de_interes_id', id)
 
   if (error) {
@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ params }) => {
     })
   }
 
-  if (images.length === 0) {
+  if (contacts.length === 0) {
     return createSucessResponse({
       responseStatus: 404,
       data: null
@@ -47,6 +47,6 @@ export const GET: APIRoute = async ({ params }) => {
 
   return createSucessResponse({
     responseStatus: 202,
-    data: images
+    data: contacts.at(0)
   })
 }

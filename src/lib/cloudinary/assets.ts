@@ -19,9 +19,11 @@ function timeout(ms: number) {
 
 export async function getAssetsFromFolder({
   folder,
+  fileNamePattern,
   timeoutMs = 5000
 }: {
   folder: string
+  fileNamePattern?: string
   timeoutMs?: number
 }) {
   cloudinary.config({
@@ -33,7 +35,11 @@ export async function getAssetsFromFolder({
   try {
     const searchPromise = new Promise<CloudinaryResponse>((resolve, reject) => {
       cloudinary.search
-        .expression(`folder:${folder}/*`)
+        .expression(
+          !fileNamePattern
+            ? `folder:${folder}/*`
+            : `folder:${folder}/* AND filename:${fileNamePattern}*`
+        )
         .sort_by('public_id', 'desc')
         .max_results(50)
         .execute()

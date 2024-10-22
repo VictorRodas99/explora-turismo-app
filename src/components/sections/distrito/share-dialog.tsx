@@ -18,10 +18,7 @@ import type { Toast } from '@/hooks/use-toast'
 import copyTextToClipboard from '@/utils/copy-to-clipboard'
 
 interface ShareDialogProps {
-  distrito: {
-    image?: string
-    name: string
-  }
+  shareWithName: string
 }
 
 interface ShareableItemProps extends React.HTMLAttributes<HTMLElement> {
@@ -57,7 +54,7 @@ function ShareableItem({ children, variant, ...props }: ShareableItemProps) {
   )
 }
 
-export default function ShareDialog({ distrito }: ShareDialogProps) {
+export default function ShareDialog({ shareWithName }: ShareDialogProps) {
   const { toast } = useToast()
 
   return (
@@ -71,14 +68,14 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
           <span className="hidden md:block"> Compartir </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-[90%] md:max-w-auto rounded-md">
+      <DialogContent className="max-w-[90%] md:max-w-[60%] lg:max-w-[40%] rounded-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Compartí este espacio
           </DialogTitle>
         </DialogHeader>
         <DialogDescription className="hidden">
-          Descrubre {distrito.name}
+          Descrubre {shareWithName}
         </DialogDescription>
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-5">
           <li className="text-sm">
@@ -109,7 +106,7 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
               <WhatsAppIcon />
               <WhatsappShare
                 url={window.location.href}
-                title={`Descubre ${distrito.name} gracias a Destino Ñeembucú!`}
+                title={`Descubre ${shareWithName} gracias a Destino Ñeembucú!`}
                 buttonTitle="Whatsapp"
                 style={REACT_SHARE_BUTTON_STYLES}
                 blankTarget={true}
@@ -121,7 +118,7 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
               <FacebookIcon />
               <FacebookShare
                 url={window.location.href}
-                title={`Descubre ${distrito.name} gracias a Destino Ñeembucú!`}
+                title={`Descubre ${shareWithName} gracias a Destino Ñeembucú!`}
                 buttonTitle="Facebook"
                 style={REACT_SHARE_BUTTON_STYLES}
                 blankTarget={true}
@@ -133,7 +130,7 @@ export default function ShareDialog({ distrito }: ShareDialogProps) {
               <TwitterIcon />
               <TwitterShare
                 url={window.location.href}
-                title={`Descubre ${distrito.name} gracias a Destino Ñeembucú!`}
+                title={`Descubre ${shareWithName} gracias a Destino Ñeembucú!`}
                 buttonTitle="X"
                 style={REACT_SHARE_BUTTON_STYLES}
                 blankTarget={true}

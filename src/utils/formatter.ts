@@ -106,3 +106,16 @@ export function transformDateToNextYear(givenDate: string) {
 
   return inputDate
 }
+
+export function slugify(givenString: string): string {
+  let newString = String(givenString)
+
+  newString = newString.replace(/^\s+|\s+$/g, '')
+  newString = newString.toLowerCase()
+  newString = newString
+    .replace(/[^a-z0-9 -]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+
+  return newString
+}

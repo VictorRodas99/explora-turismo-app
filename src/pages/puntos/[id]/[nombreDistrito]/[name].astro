@@ -1,0 +1,125 @@
+---
+import Gallery from '@/components/galleries/specific'
+import MapComponent from '@/components/map'
+import PlaceHeader from '@/components/place-header.astro'
+import Layout from '@/layouts/layout.astro'
+import { SITE_NAME } from '@/constants'
+import { usePointData } from './hooks/use-point-data'
+import PlaceInfo from './_place-info'
+import getIconForPlaceType from '@/utils/get-icon-for-place-type'
+import {
+  getFilteredInterestPoints,
+  getInterestPointCategoryInEnglish
+} from '@/utils/mappers'
+import { validPlaceTypeText } from './_constants'
+import WrongInfoBreadcrumb from '@/components/wrong-info-breadcrumb'
+import ShowMoreDescription from '@/pages/distrito/_show-more-description-dialog'
+import { SpecificPoint } from '@/pages/distrito/_points'
+import { getDistritoById } from '@/services/server/distritos'
+
+const place = await usePointData(Astro)
+
+if (!place) {
+  return Astro.redirect('/404', 404)
+}
+
+const {
+  point,
+  images,
+  error,
+  contacts,
+  description,
+  shortDescription,
+  similarPoints,
+  distritoId
+} = place
+
+const MainPlaceIcon = getIconForPlaceType({
+  type: getInterestPointCategoryInEnglish(point.tipo)
+})
+
+const distrito = await getDistritoById({
+  ...Astro,
+  params: { id: String(distritoId) }
+})
+
+const filteredPointsWithImages = await getFilteredInterestPoints(similarPoints)
+---
+
+<Layout title={`${SITE_NAME} | ${point.name}`}>
+  <main class="flex flex-col gap-12 mt-20 py-8 md:py-12 px-8 md:px-28 lg:px-32">
+    <section class="flex flex-col gap-7">
+      <PlaceHeader placeName={point.name} />
+      <Gallery
+        images={images ?? null}
+        retrieveError={error}
+        client:only="react"
+      />
+    </section>
+
+    <div class="flex flex-col md:flex-row-reverse gap-10">
+      <aside class="md:w-[40%]">
+        <MapComponent
+          coords={point.coords}
+          popupName={point.name}
+          client:only="react"
+        />
+      </aside>
+
+      <div class="md:w-[60%]">
+        <section
+          class="flex flex-col gap-7 py-5 pt-0 mb-10 border-b border-gray-300"
+        >
+          <div
+            class="w-fit flex gap-2 text-white items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80"
+          >
+            <MainPlaceIcon size={15} />
+            <span class="text-sm">{validPlaceTypeText[point.tipo]}</span>
+          </div>
+        </section>
+
+        <section
+          class="flex flex-col gap-7 py-10 pt-0 border-b border-gray-300"
+        >
+          <WrongInfoBreadcrumb>
+            Si alguna información es errónea.
+          </WrongInfoBreadcrumb>
+
+          <p>{shortDescription}</p>
+          {
+            shortDescription.trim() !== description.trim() && (
+              <ShowMoreDescription description={description} client:visible />
+            )
+          }
+        </section>
+
+        <PlaceInfo
+          contacts={contacts}
+          addressReference={point.address_reference}
+        />
+        {
+          similarPoints ? (
+            <section class="flex flex-col gap-7 py-10 border-b border-gray-300 overflow-hidden">
+              {Object.values(filteredPointsWithImages).map((points) => (
+                <SpecificPoint
+                  distrito={{ name: distrito?.name ?? '', id: distritoId }}
+                  subject={`Lugares similares en el Distrito`}
+                  places={points}
+                  type={getInterestPointCategoryInEnglish(point.tipo)}
+                  client:visible
+                />
+              ))}
+            </section>
+          ) : (
+            <section>
+              <WrongInfoBreadcrumb>
+                Si alguna información es errónea{' '}
+              </WrongInfoBreadcrumb>
+              <h2>Parece que no hay sitios similares</h2>
+            </section>
+          )
+        }
+      </div>
+    </div>
+  </main>
+</Layout>

@@ -28,21 +28,36 @@ const paths = Object.fromEntries(
       class="flex items-center justify-center gap-2 md:gap-5 md:col-span-2 border-2 border-primary rounded-full p-2 transition-all duration-300"
     >
       {
-        Object.values(paths).map(({ icon: Icon, ...path }) => (
-          <li>
-            <a
-              href={path.url}
-              class:list={[
-                'p-1 px-2 grid place-items-center truncate',
-                { 'bg-primary text-white rounded-full': path.isCurrent },
-                { 'hover:text-primary transition-colors': !path.isCurrent }
-              ]}
-            >
-              <span class="hidden md:block">{path.label}</span>
-              <span class="md:hidden">{Icon ? <Icon /> : path.label}</span>
-            </a>
-          </li>
-        ))
+        Object.values(paths).map(({ icon: Icon, ...path }) =>
+          path.url === '/' ? (
+            <li>
+              <a
+                href={path.url}
+                class:list={[
+                  'p-1 px-2 grid place-items-center truncate',
+                  { 'bg-primary text-white rounded-full': path.isCurrent },
+                  { 'hover:text-primary transition-colors': !path.isCurrent }
+                ]}
+              >
+                <span class="hidden md:block">{path.label}</span>
+                <span class="md:hidden">{Icon ? <Icon /> : path.label}</span>
+              </a>
+            </li>
+          ) : (
+            <li>
+              <button
+                class:list={[
+                  'p-1 px-2 grid place-items-center truncate',
+                  { 'bg-primary text-white rounded-full': path.isCurrent },
+                  { 'hover:text-primary transition-colors': !path.isCurrent }
+                ]}
+              >
+                <span class="hidden md:block">{path.label}</span>
+                <span class="md:hidden">{Icon ? <Icon /> : path.label}</span>
+              </button>
+            </li>
+          )
+        )
       }
     </ul>
 

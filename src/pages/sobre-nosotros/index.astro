@@ -1,0 +1,66 @@
+---
+import { MAINTAINER_EMAIL_ALTERNATIVE } from '@/constants'
+import { SITE_NAME } from '@/constants'
+import Layout from '@/layouts/layout.astro'
+import TextContainer from './text-container.astro'
+---
+
+<Layout title=`${SITE_NAME} | Sobre Nosotros y Políticas`>
+  <main class="mt-32 px-8 md:px-28 flex flex-col gap-10">
+    <TextContainer class="flex flex-col gap-5 px-36">
+      <span slot="title">Sobre Nosotros</span>
+      <p>
+        Destino Ñeembucú - Web PWA es un proyecto desarrollado por estudiantes
+        del 3° curso de la carrera de Análisis de Sistemas apasionados por la
+        promoción y preservación de la cultura, historia y naturaleza del
+        departamento de Ñeembucú.
+      </p>
+      <p>
+        Bajo la supervisión del docente de la materia de Análisis y Diseño de
+        Sistemas I y Programación de aplicaciones en Redes (optativa III) , el
+        equipo ha trabajado con el objetivo de ofrecer una herramienta digital
+        accesible para turistas y habitantes locales, brindando información
+        detallada sobre los sitios turísticos, eventos, restaurantes y
+        alojamientos de la región. Nuestro propósito es fomentar el turismo
+        local y promover la riqueza cultural de Ñeembucú, al mismo tiempo que
+        ofrecemos una experiencia digital intuitiva y enriquecedora para
+        nuestros usuarios.
+      </p>
+    </TextContainer>
+    <TextContainer>
+      <span slot="title">Política de Uso</span>
+
+      <p>
+        El uso de la plataforma Destino Ñeembucú está destinado a brindar
+        información de manera gratuita a sus usuarios. Al utilizar nuestra
+        plataforma, aceptas no reproducir, distribuir o utilizar el contenido
+        con fines comerciales sin previa autorización. Nos reservamos el derecho
+        de modificar o eliminar contenido que consideremos inapropiado o que
+        infrinja derechos de terceros.
+      </p>
+    </TextContainer>
+    <TextContainer>
+      <span slot="title">Políticas de actualización de contenidos</span>
+
+      <p>
+        La información sobre los lugares turísticos, eventos y restaurantes es
+        revisada y actualizada regularmente por nuestro equipo. Sin embargo,
+        Destino Ñeembucú no se responsabiliza por posibles desactualizaciones o
+        errores en la información. Si detectas alguna inexactitud, puedes
+        ponerte en contacto con nosotros para corregirla al correo <a
+          class="text-primary underline"
+          href={`mailto:${MAINTAINER_EMAIL_ALTERNATIVE}`}
+          >{MAINTAINER_EMAIL_ALTERNATIVE}</a
+        >.
+      </p>
+    </TextContainer>
+    <TextContainer>
+      <span slot="title">Compromiso de la Comunidad</span>
+      <p>
+        Estamos comprometidos con la preservación y difusión de la cultura local
+        de Ñeembucú. Valoramos el feedback de nuestros usuarios y trabajamos
+        continuamente para mejorar la plataforma en función de sus necesidades.
+      </p>
+    </TextContainer>
+  </main>
+</Layout>

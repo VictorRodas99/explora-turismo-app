@@ -45,30 +45,29 @@ export default function Distritos({
                 }}
                 layout
               >
-                <header className="relative w-[300px] h-[270px] overflow-hidden rounded-t-lg">
-                  <img
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105 rounded-t-lg"
-                    src={distrito.main_image ?? ''}
-                    alt={distrito.name}
-                    width={300}
-                    height={270}
-                  />
-                </header>
-                <div className="p-4 flex flex-col gap-5">
-                  <div className="flex flex-col gap-5">
-                    <h5 className="font-bold">{distrito.name}</h5>
-                    <p className="text-sm h-20">{distrito.description}</p>
+                <a href={`/distrito/${distrito.id}`}>
+                  <header className="relative w-[300px] h-[270px] overflow-hidden rounded-t-lg">
+                    <img
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105 rounded-t-lg"
+                      src={distrito.main_image ?? ''}
+                      alt={distrito.name}
+                      width={300}
+                      height={270}
+                    />
+                  </header>
+                  <div className="p-4 flex flex-col gap-5">
+                    <div className="flex flex-col gap-5">
+                      <h5 className="font-bold">{distrito.name}</h5>
+                      <p className="text-sm h-20">{distrito.description}</p>
+                    </div>
+                    <div className="w-full">
+                      <div className="flex gap-2 items-center w-fit hover:text-primary transition-colors">
+                        Visitar
+                        <ArrowRight size={15} />
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-full">
-                    <a
-                      className="flex gap-2 items-center w-fit hover:text-primary transition-colors"
-                      href={`/distrito/${distrito.id}`}
-                    >
-                      Visitar
-                      <ArrowRight size={15} />
-                    </a>
-                  </div>
-                </div>
+                </a>
               </motion.div>
             ))}
           </motion.div>

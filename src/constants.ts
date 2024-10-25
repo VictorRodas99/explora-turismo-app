@@ -15,6 +15,8 @@ export const interestPointCategories = Object.freeze({
 })
 
 export const MAINTAINER_EMAIL = 'fcaunpanalisisturismoapp@gmail.com'
+export const MAINTAINER_EMAIL_ALTERNATIVE = 'turismo@aplicadas.edu.py'
+
 export const SITE_NAME = 'Destino Ñeembucú'
 
 export const isDevMode = import.meta.env.DEV

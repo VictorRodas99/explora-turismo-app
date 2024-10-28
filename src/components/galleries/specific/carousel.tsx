@@ -22,6 +22,11 @@ export default function Carousel({
     [currentImageIndex, images]
   )
 
+  const currentImageIndicator = useMemo(
+    () => `${currentImageIndex + 1} / ${images.length}`,
+    [currentImageIndex, images.length]
+  )
+
   if (!currentImage) {
     throw new Error(
       `Given id ${currentImageId} does not exists in available images`
@@ -41,52 +46,56 @@ export default function Carousel({
   }
 
   return (
-    <div className="absolute bg-black text-white top-0 left-0 w-screen h-screen flex flex-col gap-5 p-16 overflow-hidden">
-      <header className="grid grid-cols-3">
-        <div>
+    <div className="fixed inset-0 bg-black text-white flex flex-col h-[100dvh] overflow-hidden z-50">
+      <header className="flex justify-between items-center p-4 md:px-16 md:py-8">
+        <button
+          type="button"
+          className="hover:bg-[#4a4a4a] rounded-md p-2 transition-colors text-sm select-none"
+          onClick={closeCarousel}
+        >
+          <span className="flex gap-2 items-center">
+            <X size={18} />
+            Cerrar
+          </span>
+        </button>
+
+        <div className="hidden md:block text-center text-sm">
+          {currentImageIndicator}
+        </div>
+        <div className="w-[72px]">
+          {/* <ShareDialog distrito={{ name: '' }} /> */}
+        </div>
+      </header>
+
+      <div className="flex-1 relative flex items-center justify-center min-h-0">
+        <div className="absolute inset-x-0 flex justify-between px-4 md:px-8 z-10">
           <button
             type="button"
-            className="hover:bg-[#4a4a4a] rounded-md p-2 transition-colors text-sm select-none"
-            onClick={closeCarousel}
+            className="p-2 rounded-full border-2 border-gray-500 hover:bg-gray-400 bg-black/50"
+            onClick={goToPrevious}
           >
-            <span className="flex gap-2 items-center">
-              <X size={18} />
-              Cerrar
-            </span>
+            <ChevronLeft />
+          </button>
+
+          <button
+            type="button"
+            className="p-2 rounded-full border-2 border-gray-500 hover:bg-gray-400 bg-black/50"
+            onClick={goToNext}
+          >
+            <ChevronRight />
           </button>
         </div>
 
-        <div className="text-center text-sm">{`${currentImageIndex + 1} / ${images.length}`}</div>
-        <div>{/* <ShareDialog distrito={{ name: '' }} /> */}</div>
-      </header>
-      <div className="grid place-items-center h-full">
-        <div className="grid grid-cols-3 w-full items-center">
-          <div className="flex items-center justify-start">
-            <button
-              type="button"
-              className="p-2 rounded-full border-2 border-gray-500 hover:bg-gray-400"
-              onClick={goToPrevious}
-            >
-              <ChevronLeft />
-            </button>
+        <div className="w-full h-full flex flex-col items-center">
+          <div className="md:hidden text-center text-sm py-2">
+            {currentImageIndicator}
           </div>
-
-          <div className="flex justify-center items-center h-full">
+          <div className="relative flex-1 w-full min-h-0 flex items-center justify-center px-4">
             <img
               src={currentImage.url}
               alt={currentImage.displayName}
-              className="max-w-full max-h-[calc(100vh-200px)] object-contain"
+              className="max-h-full max-w-full md:max-h-[calc(100vh-200px)] w-auto h-auto object-contain"
             />
-          </div>
-
-          <div className="flex items-center justify-end">
-            <button
-              type="button"
-              className="p-2 rounded-full border-2 border-gray-500 hover:bg-gray-400"
-              onClick={goToNext}
-            >
-              <ChevronRight />
-            </button>
           </div>
         </div>
       </div>

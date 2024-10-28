@@ -4,6 +4,7 @@ import { Logs } from 'lucide-react'
 import { useEffect, useState, useRef } from 'react'
 import ImageTour from './image-tour'
 import { AnimatePresence, motion } from 'framer-motion'
+import Carousel from './carousel'
 
 export default function Gallery({
   images,
@@ -15,6 +16,13 @@ export default function Gallery({
   const [isOpenImageTour, setisOpenImageTour] = useState(false)
   const [isMobileWidth, setIsMobileWidth] = useState(window.innerWidth < 768)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [carouselState, setCarouselState] = useState<{
+    isOpen: boolean
+    currentImageId: string | null
+  }>({
+    isOpen: false,
+    currentImageId: null
+  })
   const sliderRef = useRef<HTMLDivElement>(null)
 
   const [initialTouchPoint, setInitialTouchPoint] = useState(0)
@@ -70,6 +78,13 @@ export default function Gallery({
     return <h2>Sin imágenes</h2>
   }
 
+  const handleImageClickOnMobile = ({ imageId }: { imageId: string }) => {
+    setCarouselState({
+      isOpen: true,
+      currentImageId: imageId
+    })
+  }
+
   const handleSwipe = () => {
     const currentTime = Date.now()
     if (currentTime - lastSwipeTime < SWIPE_COOLDOWN) {
@@ -91,6 +106,7 @@ export default function Gallery({
       setLastSwipeTime(currentTime)
     }
   }
+
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     if (!sliderRef.current) return
 
@@ -125,13 +141,18 @@ export default function Gallery({
             className="flex h-full"
           >
             {images.map(({ assetId, url, name }) => (
-              <div key={assetId} className="w-full h-full flex-shrink-0">
+              <button
+                type="button"
+                key={assetId}
+                className="w-full h-full flex-shrink-0"
+                onClick={() => handleImageClickOnMobile({ imageId: assetId })}
+              >
                 <img
                   src={url}
                   alt={`imagen ${name}`}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </button>
             ))}
           </motion.div>
         </motion.div>
@@ -179,6 +200,15 @@ export default function Gallery({
             closeCallback={() => setisOpenImageTour(false)}
           />
         ) : null}
+        {carouselState.isOpen && (
+          <Carousel
+            currentImageId={carouselState.currentImageId}
+            images={images}
+            closeCarousel={() =>
+              setCarouselState({ isOpen: false, currentImageId: null })
+            }
+          />
+        )}
       </AnimatePresence>
     </>
   )

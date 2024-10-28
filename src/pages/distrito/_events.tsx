@@ -16,6 +16,7 @@ import type { Event } from '@/types'
 import { useMemo } from 'react'
 import './css/_calendar.css'
 import { getRemanentDays } from '@/utils/general'
+import { cn } from '@/utils/cn'
 
 const variants = {
   enter: (direction: number) => ({
@@ -30,6 +31,30 @@ const variants = {
     x: direction < 0 ? 1000 : -1000,
     opacity: 0
   })
+}
+
+function RemainingDays({
+  remanentDays,
+  className
+}: {
+  remanentDays: number
+  className?: string
+}) {
+  return (
+    <p
+      className={cn(
+        'text-gray-500 text-sm italic flex gap-1 items-center w-full',
+        className
+      )}
+    >
+      <span>({remanentDays === 1 ? 'queda' : 'quedan'}</span>
+      <span>{remanentDays}</span>
+      <span className="flex gap-1 items-center">
+        {remanentDays === 1 ? 'día' : 'días'}){' '}
+        <PartyPopper size={18} className="text-yellow-500" />
+      </span>
+    </p>
+  )
 }
 
 function Events({ distritoId }: { distritoId: number }) {
@@ -93,21 +118,21 @@ function Events({ distritoId }: { distritoId: number }) {
 
           return (
             <div key={`event-${event.id}`} className="flex flex-col gap-2">
-              <h5 className="font-bold">{event.subject}</h5>
-              <div className="flex gap-1">
-                <p className="text-gray-500 text-sm">
-                  {getLocaleDateString(event.start_date)}
-                  {event.end_date &&
-                    ` - ${getLocaleDateString(event.end_date)}`}
-                </p>
-                <p className="text-gray-500 text-sm italic flex gap-1">
-                  <span>({remanentDays === 1 ? 'queda' : 'quedan'}</span>
-                  <span>{remanentDays}</span>
-                  <span className="flex gap-1 items-center">
-                    {remanentDays === 1 ? 'día' : 'días'}){' '}
-                    <PartyPopper size={18} className="text-yellow-500" />
-                  </span>
-                </p>
+              <div className="flex flex-col gap-2">
+                <h5 className="font-bold">{event.subject}</h5>
+                <RemainingDays remanentDays={remanentDays} />
+              </div>
+
+              <div className="grid grid-cols-2">
+                <div>
+                  <p className="text-gray-500 text-sm">
+                    {`Inicio: ${getLocaleDateString(event.start_date)}`}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {event.end_date &&
+                      `Final: ${getLocaleDateString(event.end_date)}`}
+                  </p>
+                </div>
               </div>
             </div>
           )

@@ -8,6 +8,7 @@
   width: 100%;
   border: none;
   line-height: 1.125em;
+  padding-right: 1.5rem;
 }
 
 .react-calendar__navigation {

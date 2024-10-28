@@ -39,13 +39,12 @@ export function SpecificPoint({
   const [showRightButton, setShowRightButton] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies(places): we don't use places to calculate, only track its change
   useEffect(() => {
     const container = containerRef.current
     if (container) {
       setShowRightButton(container.scrollWidth > container.clientWidth)
     }
-  }, [places])
+  }, [])
 
   const scroll = (direction: 'left' | 'right') => {
     const container = containerRef.current

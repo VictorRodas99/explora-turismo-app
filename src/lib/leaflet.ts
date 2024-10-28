@@ -39,6 +39,20 @@ function setLeafletCSS() {
   })
 }
 
+function createPopupContent(name: string, lat: number, lng: number) {
+  return `
+    <div class="flex flex-col gap-2">
+      <span>${name}</span>
+      <button 
+        onclick="window.open('https://www.google.com/maps?q=${lat},${lng}', '_blank');"
+        style="color: blue; text-decoration: underline; font-size: 0.875rem;"
+      >
+        Ir a Google Maps
+      </button>
+    </div>
+  `
+}
+
 export function initLeafletMap(
   rootElementId: string,
   coords: number[],
@@ -73,7 +87,8 @@ export function initLeafletMap(
   })
 
   if (popupName) {
-    subjectLocationMarker.bindPopup(popupName).openPopup()
+    const popupContent = createPopupContent(popupName, coords[0], coords[1])
+    subjectLocationMarker.bindPopup(popupContent).openPopup()
     subjectLocationMarker.addTo(map)
   }
 
@@ -116,6 +131,13 @@ export function bindUserMarker(map: MapInterface) {
   if (userLocationLatLong) {
     console.log(userLocationLatLong)
     userLocationMarker = createMarker_(userLocationLatLong)
+
+    const popupContent = createPopupContent(
+      'Tu ubicación actual',
+      userLocationLatLong.lat,
+      userLocationLatLong.lng
+    )
+    userLocationMarker.bindPopup(popupContent)
   }
 
   if (userLocationMarker) {

@@ -20,5 +20,5 @@ export const MAINTAINER_EMAIL_ALTERNATIVE = 'turismo@aplicadas.edu.py'
 export const SITE_NAME = 'Destino Ñeembucú'
 
 export const isDevMode = import.meta.env.DEV
-export const SERVER_PORT = import.meta.env.PORT
+export const SERVER_PORT = 4321
 export const MAIN_DOMAIN = import.meta.env.DOMAIN_HOST

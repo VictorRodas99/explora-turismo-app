@@ -3,6 +3,7 @@ import vercel from '@astrojs/vercel/serverless'
 import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import react from '@astrojs/react'
+import { SERVER_PORT } from '@/constants'
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,6 +12,6 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   server: {
-    port: import.meta.env.PORT
+    port: SERVER_PORT
   }
 })

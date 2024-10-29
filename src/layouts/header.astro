@@ -1,8 +1,9 @@
 ---
 import type { PathsWithoutIconsAsEntries } from './utils/get-icon-from-pathname'
 import getIconFromPathName from './utils/get-icon-from-pathname'
-import SearchIcon from '@/components/icons/search'
 import { getWebsitePaths } from '@/utils/general'
+import Search from '@/components/header/search/index'
+import '@/styles/header-blur.css'
 
 const { pathname } = Astro.url
 const pathsWithoutIcons = getWebsitePaths({ pathname })
@@ -61,68 +62,12 @@ const paths = Object.fromEntries(
       }
     </ul>
 
-    <div>
-      <button
-        id="search-nav"
-        class="p-2 border-2 text-primary border-primary rounded-full transition-colors"
-      >
-        <SearchIcon size={20} />
-      </button>
-    </div>
+    <Search client:load />
   </nav>
 </header>
 
-<style>
-  .header-blur {
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-</style>
-
 <script>
-  const navigation = document.querySelector(
-    '#navigation-container'
-  ) as HTMLUListElement
+  import blurBackgroundOnScroll from '@/utils/blur-on-scroll'
 
-  const searchIcon = document.querySelector('#search-nav') as HTMLButtonElement
-
-  window.addEventListener('scroll', () => {
-    if (window.innerWidth < 425) {
-      return
-    }
-
-    if (window.scrollY > 0) {
-      navigation.classList.add('header-blur')
-      searchIcon.classList.add('header-blur')
-    } else {
-      navigation.classList.remove('header-blur')
-      searchIcon.classList.remove('header-blur')
-    }
-  })
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 425) {
-      if (window.scrollY > 0) return
-
-      navigation.classList.remove('header-blur')
-      searchIcon.classList.remove('header-blur')
-
-      return
-    }
-
-    navigation.classList.add('header-blur')
-    searchIcon.classList.add('header-blur')
-  })
-
-  document.addEventListener('DOMContentLoaded', () => {
-    if (window.innerWidth > 425) {
-      return
-    }
-
-    navigation.classList.add('header-blur')
-    searchIcon.classList.add('header-blur')
-  })
+  blurBackgroundOnScroll({ element: document.querySelector('#navigation-container') })
 </script>

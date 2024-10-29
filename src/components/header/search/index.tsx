@@ -90,7 +90,11 @@ function SearchForm({ isFormOpen, handleFormOpen }: SearchFormProps) {
           onValueChange={(query) => debouncedSearch(query)}
         />
         <CommandList>
-          {isLoading && <CommandLoading>Cargando...</CommandLoading>}
+          {isLoading && (
+            <CommandLoading className="text-center text-sm py-6">
+              Cargando...
+            </CommandLoading>
+          )}
 
           {!isLoading && results.length === 0 ? (
             <CommandEmpty>Sin resultados.</CommandEmpty>

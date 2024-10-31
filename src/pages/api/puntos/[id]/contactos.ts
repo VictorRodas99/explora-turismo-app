@@ -4,6 +4,7 @@ import {
   createSucessResponse
 } from '@/pages/api/_utils/create-response'
 import type { APIRoute } from 'astro'
+import { StatusCodes } from 'http-status-codes'
 
 export const GET: APIRoute = async ({ params }) => {
   const { id } = params
@@ -11,7 +12,7 @@ export const GET: APIRoute = async ({ params }) => {
   if (!id) {
     return createErrorResponse({
       errorMessage: 'Missing id param to get interest points',
-      responseStatus: 403
+      responseStatus: StatusCodes.BAD_REQUEST
     })
   }
 
@@ -20,7 +21,7 @@ export const GET: APIRoute = async ({ params }) => {
   if (Number.isNaN(parsedId) || parsedId <= 0) {
     return createErrorResponse({
       errorMessage: 'Id param must be a positive number!',
-      responseStatus: 403
+      responseStatus: StatusCodes.BAD_REQUEST
     })
   }
 
@@ -34,19 +35,19 @@ export const GET: APIRoute = async ({ params }) => {
 
     return createErrorResponse({
       errorMessage: error.message,
-      responseStatus: 505
+      responseStatus: StatusCodes.INTERNAL_SERVER_ERROR
     })
   }
 
   if (contacts.length === 0) {
     return createSucessResponse({
-      responseStatus: 404,
+      responseStatus: StatusCodes.NOT_FOUND,
       data: null
     })
   }
 
   return createSucessResponse({
-    responseStatus: 202,
+    responseStatus: StatusCodes.OK,
     data: contacts.at(0)
   })
 }

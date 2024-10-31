@@ -5,6 +5,7 @@ import {
 } from '../_utils/create-response'
 import { supabase } from '@/lib/supabase'
 import type { InterestPointCategory } from '@/types'
+import { StatusCodes } from 'http-status-codes'
 
 export interface SearchResult {
   type: 'distrito' | 'punto_de_interes'
@@ -20,7 +21,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (request.headers.get('Content-Type') !== 'application/json') {
     return createErrorResponse({
       errorMessage: 'Body should be in json format',
-      responseStatus: 403
+      responseStatus: StatusCodes.BAD_REQUEST
     })
   }
 
@@ -31,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (!query || typeof query !== 'string') {
       return createErrorResponse({
         errorMessage: 'Query parameter is required and must be a string',
-        responseStatus: 400
+        responseStatus: StatusCodes.BAD_REQUEST
       })
     }
 
@@ -64,7 +65,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (distritosError || pointsError) {
       return createErrorResponse({
-        responseStatus: 505,
+        responseStatus: StatusCodes.INTERNAL_SERVER_ERROR,
         errorMessage: String(distritosError?.message || pointsError?.message)
       })
     }
@@ -97,12 +98,12 @@ export const POST: APIRoute = async ({ request }) => {
     ]
 
     return createSucessResponse({
-      responseStatus: 200,
+      responseStatus: StatusCodes.OK,
       data: formattedResults
     })
   } catch (error) {
     return createErrorResponse({
-      responseStatus: 500,
+      responseStatus: StatusCodes.INTERNAL_SERVER_ERROR,
       errorMessage:
         error instanceof Error ? error.message : 'An unknown error occurred'
     })

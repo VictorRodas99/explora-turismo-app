@@ -6,6 +6,7 @@ import {
   createErrorResponse,
   createSucessResponse
 } from '../_utils/create-response'
+import { StatusCodes } from 'http-status-codes'
 
 export const GET: APIRoute = async ({ url }) => {
   const page = Number(url.searchParams.get('page')) ?? 1
@@ -19,7 +20,7 @@ export const GET: APIRoute = async ({ url }) => {
   if (Number.isNaN(page)) {
     return createErrorResponse({
       errorMessage: 'Page param must be a valid number',
-      responseStatus: 403
+      responseStatus: StatusCodes.BAD_REQUEST
     })
   }
 
@@ -33,16 +34,19 @@ export const GET: APIRoute = async ({ url }) => {
 
   if (error) {
     if (error.code === 'PGRST103') {
-      return createSucessResponse({ responseStatus: 200, data: null })
+      return createSucessResponse({
+        responseStatus: StatusCodes.OK,
+        data: null
+      })
     }
 
     console.error(error)
 
     return createErrorResponse({
       errorMessage: error.message,
-      responseStatus: 505
+      responseStatus: StatusCodes.INTERNAL_SERVER_ERROR
     })
   }
 
-  return createSucessResponse({ responseStatus: 200, data })
+  return createSucessResponse({ responseStatus: StatusCodes.OK, data })
 }

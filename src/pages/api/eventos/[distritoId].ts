@@ -4,6 +4,7 @@ import {
   createSucessResponse
 } from '../_utils/create-response'
 import { supabase } from '@/lib/supabase'
+import { StatusCodes } from 'http-status-codes'
 
 export const GET: APIRoute = async ({ params }) => {
   const { distritoId } = params
@@ -11,7 +12,7 @@ export const GET: APIRoute = async ({ params }) => {
   if (!distritoId) {
     return createErrorResponse({
       errorMessage: "Missing id param to get district's events",
-      responseStatus: 403
+      responseStatus: StatusCodes.BAD_REQUEST
     })
   }
 
@@ -20,7 +21,7 @@ export const GET: APIRoute = async ({ params }) => {
   if (Number.isNaN(parsedId) || parsedId <= 0) {
     return createErrorResponse({
       errorMessage: 'Id param must be a positive number!',
-      responseStatus: 403
+      responseStatus: StatusCodes.BAD_REQUEST
     })
   }
 
@@ -34,12 +35,12 @@ export const GET: APIRoute = async ({ params }) => {
 
     return createErrorResponse({
       errorMessage: error.message,
-      responseStatus: 505
+      responseStatus: StatusCodes.INTERNAL_SERVER_ERROR
     })
   }
 
   return createSucessResponse({
-    responseStatus: 202,
+    responseStatus: StatusCodes.OK,
     data: events.length === 0 ? null : events
   })
 }

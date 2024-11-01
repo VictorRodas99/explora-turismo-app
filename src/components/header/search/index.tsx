@@ -12,7 +12,7 @@ import {
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { DialogDescription, DialogTitle } from '@/components/dialog'
 import { useDebouncedCallback } from 'use-debounce'
-import { CommandLoading } from 'cmdk'
+// import { CommandLoading } from 'cmdk'
 import { slugify } from '@/utils/formatter'
 import type { SearchResult } from '@/pages/api/search'
 import getIconForPlaceType from '@/utils/get-icon-for-place-type'
@@ -91,9 +91,10 @@ function SearchForm({ isFormOpen, handleFormOpen }: SearchFormProps) {
         />
         <CommandList>
           {isLoading && (
-            <CommandLoading className="text-center text-sm py-6">
-              Cargando...
-            </CommandLoading>
+            // <CommandLoading className="text-center text-sm py-6">
+            //   Cargando...
+            // </CommandLoading>
+            <span>Cargando...</span>
           )}
 
           {!isLoading && results.length === 0 ? (

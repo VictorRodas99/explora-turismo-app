@@ -2,7 +2,7 @@
 import type { PathsWithoutIconsAsEntries } from './utils/get-icon-from-pathname'
 import getIconFromPathName from './utils/get-icon-from-pathname'
 import { getWebsitePaths } from '@/utils/general'
-import Search from '@/components/header/search/index'
+// import Search from '@/components/header/search/index'
 import '@/styles/header-blur.css'
 // import UserDropdownOptions from '@/components/header/user/index'
 import type { User } from '@supabase/supabase-js'
@@ -73,7 +73,7 @@ const paths = Object.fromEntries(
     </div>
 
     <div class="flex gap-2 justify-self-end">
-      <Search client:load />
+      <!-- <Search client:load /> -->
       <!-- {
         user && currentUserRole ? (
           <UserDropdownOptions user={user} role={currentUserRole} client:load />

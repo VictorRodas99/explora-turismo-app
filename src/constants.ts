@@ -14,6 +14,32 @@ export const interestPointCategories = Object.freeze({
   other: 'otro'
 })
 
+export const USER_ROLES = Object.freeze({
+  viewer: 'viewer',
+  admin: 'admin',
+  editor: 'editor'
+})
+
+export const USER_ROLES_SPANISH = Object.freeze({
+  viewer: 'Visitante',
+  admin: 'Administrador',
+  editor: 'Editor'
+})
+
+/* INPUTS THAT I USE WITH THE AUTH FORMS */
+export const AUTH_INPUTS_NAMES = Object.freeze({
+  email: 'email',
+  name: 'first-name',
+  lastname: 'last-name',
+  password: 'password'
+})
+/* ----  */
+
+export const SB_COKIE_SESSION_NAME = {
+  acesss: 'sb-access-token',
+  refresh: 'sb-refresh-token'
+}
+
 export const MAINTAINER_EMAIL = 'fcaunpanalisisturismoapp@gmail.com'
 export const MAINTAINER_EMAIL_ALTERNATIVE = 'turismo@aplicadas.edu.py'
 

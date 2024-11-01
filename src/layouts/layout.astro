@@ -6,12 +6,21 @@ import '@fontsource/poppins'
 import '@fontsource-variable/outfit'
 import '@/styles/global.css'
 import { Toaster } from '@/components/toaster'
+import type { User } from '@supabase/supabase-js'
 
 interface Props {
   title: string
+  options?: { header?: boolean; footer?: boolean }
+  user?: User | null
 }
 
-const { title } = Astro.props
+const { title, options: defaultOptionsProps, user } = Astro.props
+
+const options =
+  defaultOptionsProps === undefined
+    ? { header: true, footer: true }
+    : { header: false, footer: false }
+
 const description =
   'Tu ventana digital a la cultura, historia y naturaleza de Ñeembucú'
 const canonicalURL = Astro.site ?? Astro.url
@@ -59,10 +68,10 @@ const canonicalURL = Astro.site ?? Astro.url
     <meta name="robots" content="index, follow" />
   </head>
   <body class="bg-soft-white">
-    <Header />
+    {options?.header && <Header user={user} />}
     <slot />
     <Toaster client:only="react" />
-    <Footer />
+    {options?.footer && <Footer />}
   </body>
 </html>
 <style is:global></style>

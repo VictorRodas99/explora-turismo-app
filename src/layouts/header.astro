@@ -4,9 +4,9 @@ import getIconFromPathName from './utils/get-icon-from-pathname'
 import { getWebsitePaths } from '@/utils/general'
 import Search from '@/components/header/search/index'
 import '@/styles/header-blur.css'
-import UserDropdownOptions from '@/components/header/user/index'
+// import UserDropdownOptions from '@/components/header/user/index'
 import type { User } from '@supabase/supabase-js'
-import RegisterOrLoginDropdown from '@/components/header/user/register-or-login-dropdown'
+// import RegisterOrLoginDropdown from '@/components/header/user/register-or-login-dropdown'
 
 import getUserRole from '@/services/client/get-user-role'
 
@@ -74,13 +74,13 @@ const paths = Object.fromEntries(
 
     <div class="flex gap-2 justify-self-end">
       <Search client:load />
-      {
+      <!-- {
         user && currentUserRole ? (
           <UserDropdownOptions user={user} role={currentUserRole} client:load />
         ) : (
           <RegisterOrLoginDropdown client:load />
         )
-      }
+      } -->
     </div>
   </nav>
 </header>

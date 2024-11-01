@@ -1,4 +1,6 @@
+import type { UserRole } from '@/types'
 import type { CloudinaryResponse } from '../lib/cloudinary/response'
+import { USER_ROLES_SPANISH } from '@/constants'
 
 export function getImagesFromResponse(response: CloudinaryResponse | null) {
   if (!response) {
@@ -118,4 +120,8 @@ export function slugify(givenString: string): string {
     .replace(/-+/g, '-')
 
   return newString
+}
+
+export function mapRoleInSpanish(role: UserRole) {
+  return USER_ROLES_SPANISH[role]
 }

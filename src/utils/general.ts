@@ -1,4 +1,9 @@
-import { validPathNames } from '../constants'
+import {
+  validPathNames,
+  isDevMode,
+  SERVER_PORT,
+  MAIN_DOMAIN
+} from '../constants'
 import { transformDateToNextYear } from './formatter'
 
 export function getWebsitePaths({ pathname }: { pathname: string }) {
@@ -42,4 +47,12 @@ export function getRemanentDays({ from, to }: { from: Date; to: Date }) {
   const remanentDays = Math.ceil(msDifference / 1000 / 3600 / 24)
 
   return remanentDays
+}
+
+export function getOrigin() {
+  return import.meta.env.SSR
+    ? isDevMode
+      ? `http://localhost:${SERVER_PORT}`
+      : MAIN_DOMAIN
+    : new URL(window.location.href).origin
 }

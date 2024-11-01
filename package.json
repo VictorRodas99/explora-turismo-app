@@ -18,6 +18,7 @@
     "@fontsource-variable/outfit": "^5.1.0",
     "@fontsource/poppins": "^5.1.0",
     "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-toast": "^1.2.2",
     "@radix-ui/react-tooltip": "^1.1.3",
     "@radix-ui/react-visually-hidden": "^1.1.0",
@@ -33,6 +34,7 @@
     "cmdk": "^1.0.0",
     "framer-motion": "^11.11.7",
     "http-status-codes": "^2.3.0",
+    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.451.0",
     "react": "^18.3.1",
@@ -44,7 +46,8 @@
     "tailwindcss": "^3.4.13",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.6.2",
-    "use-debounce": "^10.0.4"
+    "use-debounce": "^10.0.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",

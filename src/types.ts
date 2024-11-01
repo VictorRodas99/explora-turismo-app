@@ -1,6 +1,8 @@
 import type { Database } from './lib/database'
 import type { interestPointCategories } from './constants'
 
+export type UserRole = 'admin' | 'editor' | 'viewer'
+
 export type Distrito = Database['public']['Tables']['distrito']['Row']
 
 export type InterestPointCategoryEnglish = keyof typeof interestPointCategories

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { getImagesFromResponse } from '@/utils/formatter'
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import deepClone from '@/utils/deep-clone'

@@ -9,7 +9,7 @@ import { StatusCodes } from 'http-status-codes'
 import type { Provider } from '@supabase/supabase-js'
 import { getOrigin } from '@/utils/general'
 
-export const POST: APIRoute = async ({ request, cookies, redirect }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   const formData = await request.formData()
 
   const email = formData.get(AUTH_INPUTS_NAMES.email)?.toString()

@@ -1,0 +1,24 @@
+---
+import { SB_COKIE_SESSION_NAME, SITE_NAME } from '@/constants'
+import Layout from '@/layouts/layout.astro'
+import LoginForm from '@/components/auth/login-form'
+import AuthLayout from '@/layouts/auth-forms.astro'
+
+const { cookies, redirect } = Astro
+
+const accessToken = cookies.get(SB_COKIE_SESSION_NAME.acesss)
+const refreshToken = cookies.get(SB_COKIE_SESSION_NAME.refresh)
+
+if (accessToken && refreshToken) {
+  return redirect('/')
+}
+---
+
+<Layout
+  title={`${SITE_NAME} | Login`}
+  options={{ header: false, footer: false }}
+>
+  <AuthLayout>
+    <LoginForm client:load />
+  </AuthLayout>
+</Layout>

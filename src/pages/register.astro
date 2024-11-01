@@ -1,0 +1,15 @@
+---
+import Layout from '@/layouts/layout.astro'
+import RegisterForm from '@/components/auth/register-form'
+import { SITE_NAME } from '@/constants'
+import AuthLayout from '@/layouts/auth-forms.astro'
+---
+
+<Layout
+  title={`${SITE_NAME} | Registro`}
+  options={{ header: false, footer: false }}
+>
+  <AuthLayout>
+    <RegisterForm client:load />
+  </AuthLayout>
+</Layout>

@@ -6,29 +6,7 @@ import Layout from '@/layouts/layout.astro'
 import Hero from '@/components/hero.astro'
 import { API_STATES } from './api/_states'
 import type { Distrito } from '@/types'
-import { SB_COKIE_SESSION_NAME, SITE_NAME } from '@/constants'
-import { supabase } from '@/lib/supabase'
-import type { User } from '@supabase/supabase-js'
-
-const { cookies } = Astro
-
-const accessToken = cookies.get(SB_COKIE_SESSION_NAME.acesss)
-const refreshToken = cookies.get(SB_COKIE_SESSION_NAME.refresh)
-
-let user: User | null = null
-
-if (accessToken && refreshToken) {
-  const { data, error } = await supabase.auth.setSession({
-    access_token: accessToken.value,
-    refresh_token: refreshToken.value
-  })
-
-  if (error) {
-    console.error(error)
-  }
-
-  user = error ? null : data.user
-}
+import { SITE_NAME } from '@/constants'
 
 const response = await GET(Astro)
 const { statusText, data: apiResponse } = await response.json()
@@ -43,7 +21,7 @@ const distritosWithSortDescriptions =
   })) ?? null
 ---
 
-<Layout title={SITE_NAME} user={user}>
+<Layout title={SITE_NAME}>
   <main class="flex flex-col gap-12 px-8 md:px-28">
     <Hero />
     <Distritos

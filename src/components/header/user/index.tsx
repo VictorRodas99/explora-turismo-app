@@ -37,6 +37,8 @@ export default function UserDropdownOptions({
   role: UserRole
 }) {
   const { user_metadata: userMetadata } = user
+  const { avatar_url: avatarUrl } = userMetadata
+
   const username = useMemo(() => {
     const { firstName, lastname } = userMetadata
 
@@ -61,9 +63,17 @@ export default function UserDropdownOptions({
         <button
           type="button"
           ref={dropdownTriggerRef}
-          className="text-primary p-2 rounded-full border-2 border-primary focus:outline-none hover:bg-primary hover:text-white transition-colors"
+          className="p-2 rounded-full  overflow-hidden w-10 h-10 relative"
         >
-          <User2 size={20} />
+          {avatarUrl ? (
+            <div className="w-12 h-12 absolute top-0 left-0">
+              <img src={avatarUrl} alt="avatar" className="object-cover" />
+            </div>
+          ) : (
+            <div className="w-full h-full text-primary border-2 border-primary focus:outline-none hover:bg-primary hover:text-white transition-colors">
+              <User2 size={20} />
+            </div>
+          )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit">

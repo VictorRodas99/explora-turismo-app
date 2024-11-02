@@ -4,13 +4,13 @@ import Layout from '@/layouts/layout.astro'
 import LoginForm from '@/components/auth/login-form'
 import AuthLayout from '@/layouts/auth-forms.astro'
 
-const { cookies, redirect } = Astro
+const { cookies } = Astro
 
 const accessToken = cookies.get(SB_COKIE_SESSION_NAME.acesss)
 const refreshToken = cookies.get(SB_COKIE_SESSION_NAME.refresh)
 
 if (accessToken && refreshToken) {
-  return redirect('/')
+  return Astro.redirect('/')
 }
 ---
 

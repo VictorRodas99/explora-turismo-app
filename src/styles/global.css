@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --primary: #34b754;
+    --accent: #196735;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 

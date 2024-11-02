@@ -6,15 +6,13 @@ import '@fontsource/poppins'
 import '@fontsource-variable/outfit'
 import '@/styles/global.css'
 import { Toaster } from '@/components/toaster'
-import type { User } from '@supabase/supabase-js'
 
 interface Props {
   title: string
   options?: { header?: boolean; footer?: boolean }
-  user?: User | null
 }
 
-const { title, options: defaultOptionsProps, user } = Astro.props
+const { title, options: defaultOptionsProps } = Astro.props
 
 const options =
   defaultOptionsProps === undefined
@@ -68,7 +66,7 @@ const canonicalURL = Astro.site ?? Astro.url
     <meta name="robots" content="index, follow" />
   </head>
   <body class="bg-soft-white">
-    {options?.header && <Header user={user} />}
+    {options?.header && <Header />}
     <slot />
     <Toaster client:only="react" />
     {options?.footer && <Footer />}

@@ -58,6 +58,35 @@ export type Database = {
         }
         Relationships: []
       }
+      distrito_favoritos: {
+        Row: {
+          created_at: string
+          distrito_id: number | null
+          id: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          distrito_id?: number | null
+          id?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          distrito_id?: number | null
+          id?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'distrito_favoritos_distrito_id_fkey'
+            columns: ['distrito_id']
+            isOneToOne: false
+            referencedRelation: 'distrito'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       distrito_imagenes: {
         Row: {
           distrito_id: number
@@ -115,6 +144,35 @@ export type Database = {
             columns: ['distrito_id']
             isOneToOne: false
             referencedRelation: 'distrito'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      punto_interes_favoritos: {
+        Row: {
+          created_at: string
+          id: number
+          punto_de_interes_id: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          punto_de_interes_id?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          punto_de_interes_id?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'punto_interes_favoritos_punto_de_interes_id_fkey'
+            columns: ['punto_de_interes_id']
+            isOneToOne: false
+            referencedRelation: 'puntos_de_interes'
             referencedColumns: ['id']
           }
         ]
@@ -250,15 +308,45 @@ export type Database = {
           }
         ]
       }
+      roles_de_usuario: {
+        Row: {
+          id: number
+          role: Database['public']['Enums']['app_role'] | null
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          role?: Database['public']['Enums']['app_role'] | null
+          user_id?: string
+        }
+        Update: {
+          id?: number
+          role?: Database['public']['Enums']['app_role'] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      custom_access_token_hook: {
+        Args: {
+          event: Json
+        }
+        Returns: Json
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: 'admin' | 'editor' | 'viewer'
+      point_type:
+        | 'alojamiento'
+        | 'turistico'
+        | 'historico'
+        | 'cine'
+        | 'gastronomia'
+        | 'otro'
     }
     CompositeTypes: {
       [_ in never]: never

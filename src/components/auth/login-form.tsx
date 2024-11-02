@@ -7,6 +7,7 @@ import { X } from 'lucide-react'
 import { API_STATES } from '@/pages/api/_states'
 import { useToast } from '@/hooks/use-toast'
 import type React from 'react'
+import type { Provider } from '@supabase/supabase-js'
 
 export default function LoginForm() {
   const { isLoading, formError, handleSubmit, resetFormError } = useForm({
@@ -25,15 +26,9 @@ export default function LoginForm() {
     }
   }
 
-  const handleClickOnProviderButton = async (event: React.MouseEvent) => {
-    const button = event.target
-
-    if (!(button instanceof HTMLButtonElement)) {
-      return
-    }
-
+  const handleClickOnProviderButton = async (provider: Provider) => {
     const formData = new FormData()
-    formData.append(button.name, button.value)
+    formData.append('provider', provider)
 
     const response = await loginUser(formData)
 
@@ -130,10 +125,8 @@ export default function LoginForm() {
           </button>
           <button
             type="button"
-            value="google"
-            name="provider"
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-300 hover:text-accent-foreground h-10 px-4 py-2 w-full"
-            onClick={handleClickOnProviderButton}
+            onClick={() => handleClickOnProviderButton('google')}
           >
             <div className="flex gap-2 items-center justify-center">
               <GoogleIcon size={18} />

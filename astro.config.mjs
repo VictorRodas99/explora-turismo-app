@@ -10,7 +10,9 @@ export default defineConfig({
   integrations: [tailwind({ applyBaseStyles: false }), react()],
   devToolbar: { enabled: false },
   output: 'server',
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: { enabled: true }
+  }),
   server: {
     port: SERVER_PORT
   }

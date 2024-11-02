@@ -1,23 +1,23 @@
 ---
-import { Heart } from 'lucide-react'
+import type { Distrito, InterestPoint } from '@/types'
 import ShareDialog from './sections/distrito/share-dialog'
+import SavePlace from '@/components/save-place'
+import { getSession } from '@/services/server/session'
 
 interface Props {
-  placeName: string
+  place: (Distrito | InterestPoint) & { type: 'distrito' | 'punto' }
 }
 
-const { placeName } = Astro.props
+const { place } = Astro.props
+const { session } = await getSession()
+
+const accessToken = session?.access_token ?? null
 ---
 
 <div class="w-full flex justify-between">
-  <h1 class="font-outfit text-4xl font-bold">{placeName}</h1>
+  <h1 class="font-outfit text-4xl font-bold">{place.name}</h1>
   <div class="flex gap-3">
-    <ShareDialog shareWithName={placeName} client:only="react" />
-    <button
-      class="flex gap-2 items-center text-sm p-2 hover:bg-gray-200 hover:rounded-md focus:scale-95 transition-all"
-    >
-      <Heart size={15} />
-      <span class="hidden md:block"> Guardar </span>
-    </button>
+    <ShareDialog shareWithName={place.name} client:only="react" />
+    <SavePlace place={place} session={{ accessToken }} client:visible />
   </div>
 </div>

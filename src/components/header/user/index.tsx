@@ -28,6 +28,7 @@ import { mapRoleInSpanish } from '@/utils/formatter'
 import { useEffect, useMemo, useRef } from 'react'
 import { USER_ROLES } from '@/constants'
 import blurBackgroundOnScroll from '@/utils/blur-on-scroll'
+import { cn } from '@/utils/cn'
 
 export default function UserDropdownOptions({
   user,
@@ -63,14 +64,17 @@ export default function UserDropdownOptions({
         <button
           type="button"
           ref={dropdownTriggerRef}
-          className="p-2 rounded-full  overflow-hidden w-10 h-10 relative"
+          className={cn('p-2 rounded-full w-10 h-10 relative', {
+            'overflow-hidden text-primary border-2 border-primary focus:outline-none hover:bg-primary hover:text-white transition-colors':
+              !avatarUrl
+          })}
         >
           {avatarUrl ? (
             <div className="w-12 h-12 absolute top-0 left-0">
               <img src={avatarUrl} alt="avatar" className="object-cover" />
             </div>
           ) : (
-            <div className="w-full h-full text-primary border-2 border-primary focus:outline-none hover:bg-primary hover:text-white transition-colors">
+            <div>
               <User2 size={20} />
             </div>
           )}

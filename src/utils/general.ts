@@ -15,13 +15,8 @@ export function getWebsitePaths({ pathname }: { pathname: string }) {
       url: `/${validPathNames.home}`,
       isCurrent: currentPath === validPathNames.home
     },
-    places: {
-      label: 'Lugares',
-      url: `/${validPathNames.places}`,
-      isCurrent: currentPath === validPathNames.places
-    },
     preferences: {
-      label: 'Preferencias',
+      label: 'Favoritos',
       url: `/${validPathNames.preferences}`,
       isCurrent: currentPath === validPathNames.preferences
     },

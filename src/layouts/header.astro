@@ -52,9 +52,9 @@ const paths = Object.fromEntries(
 )
 ---
 
-<header class="w-full fixed left-0 top-0 px-1 md:px-32 pt-7 z-50">
-  <nav class="grid grid-cols-3 md:grid-cols-6 place-items-center text-sm">
-    <div class="col-span-2 md:col-span-5 grid place-items-center">
+<header class="w-full sticky left-0 top-0 pt-7 z-50">
+  <nav class="text-sm">
+    <div class="absolute left-3 md:left-[30%] lg:left-[40%] grid place-items-center">
       <ul
         id="navigation-container"
         class="flex items-center justify-center px-1 md:px-2 md:gap-5 border-2 border-primary rounded-full p-2 transition-all duration-300"
@@ -94,7 +94,7 @@ const paths = Object.fromEntries(
       </ul>
     </div>
 
-    <div class="flex gap-2 justify-self-end">
+    <div class="absolute right-3 md:right-28 flex gap-2 min-h-12 items-center">
       <Search client:load />
       {
         user && currentUserRole ? (

@@ -1,5 +1,5 @@
 import type { getWebsitePaths } from '@/utils/general'
-import { House, Bird, Crown } from 'lucide-react'
+import { House, Crown } from 'lucide-react'
 
 type PathsWithoutIcons = ReturnType<typeof getWebsitePaths>
 type Keys = keyof PathsWithoutIcons
@@ -17,8 +17,8 @@ export default function getIconFromPathName(
     case 'home':
       return House
 
-    case 'places':
-      return Bird
+    // case 'places':
+    //   return Bird
 
     case 'preferences':
       return Crown

@@ -1,7 +1,7 @@
 export const validPathNames = Object.freeze({
   home: '',
   places: 'lugares',
-  preferences: 'preferencias',
+  preferences: 'favoritos',
   about: 'acerca-de'
 })
 
@@ -36,9 +36,11 @@ export const AUTH_INPUTS_NAMES = Object.freeze({
 /* ----  */
 
 export const SB_COKIE_SESSION_NAME = {
-  acesss: 'sb-access-token',
+  access: 'sb-access-token',
   refresh: 'sb-refresh-token'
 }
+
+export const RECENTLY_VIEWED_KEY_NAME = 'recently-viewed'
 
 export const MAINTAINER_EMAIL = 'fcaunpanalisisturismoapp@gmail.com'
 export const MAINTAINER_EMAIL_ALTERNATIVE = 'turismo@aplicadas.edu.py'

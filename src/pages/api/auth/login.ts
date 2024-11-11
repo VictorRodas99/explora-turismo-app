@@ -66,7 +66,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const { access_token, refresh_token } = data.session
 
-  cookies.set(SB_COKIE_SESSION_NAME.acesss, access_token, {
+  cookies.set(SB_COKIE_SESSION_NAME.access, access_token, {
     path: '/'
   })
   cookies.set(SB_COKIE_SESSION_NAME.refresh, refresh_token, {

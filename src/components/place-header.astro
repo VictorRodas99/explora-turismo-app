@@ -1,11 +1,11 @@
 ---
-import type { Distrito, InterestPoint } from '@/types'
+import type { Place } from '@/types'
 import ShareDialog from './sections/distrito/share-dialog'
 import SavePlace from '@/components/save-place'
 import { getSession } from '@/services/server/session'
 
 interface Props {
-  place: (Distrito | InterestPoint) & { type: 'distrito' | 'punto' }
+  place: Place
 }
 
 const { place } = Astro.props

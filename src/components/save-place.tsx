@@ -1,10 +1,11 @@
 import { useToast } from '@/hooks/use-toast'
-import type { Distrito, InterestPoint } from '@/types'
+import type { Place } from '@/types'
 import { ToastAction } from '@/components/toast'
 import { Heart } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { ApiResponse } from '@/services/validations/api-response.zod'
 import { API_STATES } from '@/pages/api/_states'
+import { savePlaceLocally } from '@/utils/local-storage'
 
 const isFavorite = async ({
   session,
@@ -41,7 +42,7 @@ export default function SavePlace({
   place,
   session
 }: {
-  place: (Distrito | InterestPoint) & { type: 'distrito' | 'punto' }
+  place: Place
   session: { accessToken: string | null }
 }) {
   const [isChecking, setIsChecking] = useState(false)
@@ -117,6 +118,10 @@ export default function SavePlace({
   useEffect(() => {
     setIsSaved(originalSavedState)
   }, [originalSavedState])
+
+  useEffect(() => {
+    savePlaceLocally(place)
+  }, [place])
 
   if (isChecking) {
     return (

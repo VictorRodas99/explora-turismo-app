@@ -1,3 +1,4 @@
+import { calculateAverageCoordinate } from '@/utils/mappers'
 import type {
   LatLng,
   Map as MapInterface,
@@ -53,13 +54,74 @@ function createPopupContent(name: string, lat: number, lng: number) {
   `
 }
 
+function initWithMutipleMarkers(
+  rootElementId: string,
+  locations: Array<{ name: string; coords: number[] }>
+) {
+  if (!Array.isArray(locations)) {
+    throw new Error('Locations must be a valid array')
+  }
+
+  setLeafletCSS().catch((error: string) => {
+    throw new Error(error)
+  })
+
+  const averageCoords = calculateAverageCoordinate(
+    locations.map(({ coords }) => ({
+      latitude: coords[0],
+      longitude: coords[1]
+    }))
+  )
+
+  const latLngExpression = latLng(
+    averageCoords.latitude,
+    averageCoords.longitude
+  )
+
+  const mapOptions: MapOptions = {
+    center: latLngExpression,
+    zoom: 9
+  }
+
+  const map = createMap(rootElementId, mapOptions)
+  const layer = tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  })
+
+  for (const location of locations) {
+    const [latitude, longitude] = location.coords
+    const { name: popupName } = location
+
+    const subjectLocationMarker = createMarker_(latLng(latitude, longitude))
+
+    const popupContent = createPopupContent(popupName, latitude, longitude)
+    subjectLocationMarker.bindPopup(popupContent).openPopup()
+    subjectLocationMarker.addTo(map)
+  }
+
+  layer.addTo(map)
+
+  return map
+}
+
 export function initLeafletMap(
   rootElementId: string,
-  coords: number[],
-  popupName?: string
+  options: {
+    coords?: number[]
+    popupName?: string
+    locations?: Array<{ name: string; coords: number[] }>
+  }
 ) {
+  const { coords, popupName, locations } = options
+
   if (typeof rootElementId !== 'string') {
     throw new Error('Expected id to be a valid string')
+  }
+
+  if (locations) {
+    return initWithMutipleMarkers(rootElementId, locations)
   }
 
   if (!Array.isArray(coords) || coords.some((coord) => Number.isNaN(coord))) {

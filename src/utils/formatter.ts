@@ -1,4 +1,4 @@
-import type { UserRole } from '@/types'
+import type { InterestPoint, UserRole } from '@/types'
 import type { CloudinaryResponse } from '../lib/cloudinary/response'
 import { USER_ROLES_SPANISH } from '@/constants'
 
@@ -124,4 +124,14 @@ export function slugify(givenString: string): string {
 
 export function mapRoleInSpanish(role: UserRole) {
   return USER_ROLES_SPANISH[role]
+}
+
+export function getInterestPointUrl({
+  point,
+  distrito
+}: {
+  point: { id: number; name: string }
+  distrito: { id: number; name: string }
+}) {
+  return `/puntos/${point.id}/${slugify(distrito.name)}/${slugify(point.name)}?distrito_id=${distrito.id}`
 }

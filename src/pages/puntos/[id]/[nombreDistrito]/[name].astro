@@ -49,7 +49,14 @@ const filteredPointsWithImages = await getFilteredInterestPoints(similarPoints)
 <Layout title={`${SITE_NAME} | ${point.name}`}>
   <main class="flex flex-col gap-12 mt-20 py-8 md:py-12 px-8 md:px-28 lg:px-32">
     <section class="flex flex-col gap-7">
-      <PlaceHeader place={{ type: 'punto', ...place.point }} />
+      <PlaceHeader
+        place={{
+          type: 'punto',
+          main_image: images?.at(0)?.url ?? null,
+          distrito: { id: Number(distrito?.id), name: String(distrito?.name) },
+          ...place.point
+        }}
+      />
       <Gallery
         images={images ?? null}
         retrieveError={error}

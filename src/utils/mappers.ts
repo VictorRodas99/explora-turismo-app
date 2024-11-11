@@ -68,3 +68,52 @@ export async function getFilteredInterestPoints(
 
   return interestPointsCategoriesFiltered
 }
+
+interface Coordinate {
+  latitude: number
+  longitude: number
+}
+
+export function calculateAverageCoordinate(
+  coordinates: Coordinate[]
+): Coordinate {
+  if (coordinates.length === 0) {
+    throw new Error('Cannot calculate average of empty coordinates array')
+  }
+
+  const cartesian = coordinates.map((coord) => {
+    // convert to radians
+    const lat = (coord.latitude * Math.PI) / 180
+    const lng = (coord.longitude * Math.PI) / 180
+
+    // convert to cartesian coordinates
+    return {
+      x: Math.cos(lat) * Math.cos(lng),
+      y: Math.cos(lat) * Math.sin(lng),
+      z: Math.sin(lat)
+    }
+  })
+
+  // calculate average
+  const sum = cartesian.reduce((acc, curr) => ({
+    x: acc.x + curr.x,
+    y: acc.y + curr.y,
+    z: acc.z + curr.z
+  }))
+
+  const avg = {
+    x: sum.x / coordinates.length,
+    y: sum.y / coordinates.length,
+    z: sum.z / coordinates.length
+  }
+
+  const longitude = Math.atan2(avg.y, avg.x)
+  const hypotenuse = Math.sqrt(avg.x * avg.x + avg.y * avg.y)
+  const latitude = Math.atan2(avg.z, hypotenuse)
+
+  // convert to degrees
+  return {
+    latitude: (latitude * 180) / Math.PI,
+    longitude: (longitude * 180) / Math.PI
+  }
+}

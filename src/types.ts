@@ -18,3 +18,18 @@ export interface InterestPoint extends InterestPointDB {
 }
 
 export type InterestPointContacts = Omit<InterestPointContactsDB, 'created_at'>
+
+type DistrictPlace = Distrito & {
+  type: 'distrito'
+}
+
+type PointPlace = InterestPoint & {
+  type: 'punto'
+  distrito: {
+    id: number
+    name: string
+  }
+  main_image: string | null
+}
+
+export type Place = DistrictPlace | PointPlace

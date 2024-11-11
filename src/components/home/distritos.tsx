@@ -4,11 +4,14 @@ import ArrowRight from '../icons/arrow-right'
 import type { Distrito } from '@/types'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { DEFAULT_API_LIMIT_FOR } from '@/pages/api/_states'
 
 export default function Distritos({
-  initialDistritos
+  initialDistritos,
+  fetchFrom
 }: {
   initialDistritos: Distrito[] | null
+  fetchFrom?: string
 }) {
   const [distritos, setDistritos] = useState(initialDistritos ?? [])
 
@@ -73,7 +76,11 @@ export default function Distritos({
           </motion.div>
         </>
       )}
-      <SeeMoreDistritosButton updateDistritos={updateDistritos} />
+      <SeeMoreDistritosButton
+        updateDistritos={updateDistritos}
+        existsNextPage={distritos.length < DEFAULT_API_LIMIT_FOR.distritos}
+        endpoint={fetchFrom}
+      />
     </section>
   )
 }

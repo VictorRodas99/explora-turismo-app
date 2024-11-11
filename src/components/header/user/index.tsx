@@ -64,8 +64,8 @@ export default function UserDropdownOptions({
         <button
           type="button"
           ref={dropdownTriggerRef}
-          className={cn('p-2 rounded-full w-10 h-10 relative', {
-            'overflow-hidden text-primary border-2 border-primary focus:outline-none hover:bg-primary hover:text-white transition-colors':
+          className={cn('p-2 rounded-full w-10 h-10 relative overflow-hidden', {
+            'text-primary border-2 border-primary focus:outline-none hover:bg-primary hover:text-white transition-colors':
               !avatarUrl
           })}
         >

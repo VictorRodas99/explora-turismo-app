@@ -5,45 +5,34 @@ import { getWebsitePaths } from '@/utils/general'
 import Search from '@/components/header/search/index'
 import '@/styles/header-blur.css'
 import UserDropdownOptions from '@/components/header/user/index'
-import type { User } from '@supabase/supabase-js'
 import RegisterOrLoginDropdown from '@/components/header/user/register-or-login-dropdown'
 
 import getUserRole from '@/services/client/get-user-role'
-import { supabase } from '@/lib/supabase'
-import { SB_COKIE_SESSION_NAME } from '@/constants'
+import { getSession } from '@/services/server/session'
 
 const { cookies } = Astro
+const { user, error, session } = await getSession({ cookies })
 
-const accessToken = cookies.get(SB_COKIE_SESSION_NAME.acesss)
-const refreshToken = cookies.get(SB_COKIE_SESSION_NAME.refresh)
-
-let user: User | null = null
-
-if (accessToken && refreshToken) {
-  const { data, error } = await supabase.auth.setSession({
-    access_token: accessToken.value,
-    refresh_token: refreshToken.value
-  })
-
-  if (error) {
-    if (String(error?.message).includes('Invalid Refresh Token')) {
-      cookies.delete(SB_COKIE_SESSION_NAME.acesss, { path: '/' })
-      cookies.delete(SB_COKIE_SESSION_NAME.refresh, { path: '/' })
-
-      return Astro.redirect('/login')
-    }
-  }
-
-  user = error ? null : data.user
+if (String(error?.message).includes('Invalid Refresh Token')) {
+  console.error('Invalid refresh token')
 }
 
 const currentUserRole = user ? await getUserRole() : null
 
+const filterAuthPaths = (pathsToFilter: ReturnType<typeof getWebsitePaths>) => {
+  const { preferences, ...paths } = pathsToFilter
+  return paths
+}
+
 const { pathname } = Astro.url
 const pathsWithoutIcons = getWebsitePaths({ pathname })
 
+const pathWithoutIconsOnSession = !session
+  ? filterAuthPaths(pathsWithoutIcons)
+  : pathsWithoutIcons
+
 const paths = Object.fromEntries(
-  (Object.entries(pathsWithoutIcons) as PathsWithoutIconsAsEntries).map(
+  (Object.entries(pathWithoutIconsOnSession) as PathsWithoutIconsAsEntries).map(
     ([name, path]) => [
       name,
       { ...path, icon: getIconFromPathName(name, pathsWithoutIcons) }
@@ -54,14 +43,16 @@ const paths = Object.fromEntries(
 
 <header class="w-full sticky left-0 top-0 pt-7 z-50">
   <nav class="text-sm">
-    <div class="absolute left-3 md:left-[30%] lg:left-[40%] grid place-items-center">
+    <div
+      class="absolute left-3 md:left-[30%] lg:left-[40%] grid place-items-center"
+    >
       <ul
         id="navigation-container"
         class="flex items-center justify-center px-1 md:px-2 md:gap-5 border-2 border-primary rounded-full p-2 transition-all duration-300"
       >
         {
           Object.values(paths).map(({ icon: Icon, ...path }) =>
-            path.url === '/' ? (
+            path.url !== '/acerca-de' ? (
               <li>
                 <a
                   href={path.url}

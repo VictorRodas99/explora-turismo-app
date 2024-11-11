@@ -1,0 +1,70 @@
+---
+import { SITE_NAME } from '@/constants'
+import Layout from '@/layouts/layout.astro'
+import { getAllFavorites } from '@/services/server/favorites'
+import { getSession } from '@/services/server/session'
+import { StatusCodes } from 'http-status-codes'
+import { API_STATES } from '../api/_states'
+import { getInterestPointUrl, truncateText } from '@/utils/formatter'
+import FavoritePlaces from './_favorite-places'
+import getInterestPointsImages from '@/services/server/points-of-interest-images'
+
+const { session } = await getSession({ cookies: Astro.cookies })
+
+if (!session) {
+  return Astro.redirect('/404', StatusCodes.NOT_FOUND)
+}
+
+const response = await getAllFavorites(Astro)
+
+if (response.status === API_STATES.error) {
+  console.error(response.data)
+  return Astro.redirect('/404', StatusCodes.NOT_FOUND)
+}
+
+const { favoriteDistricts, favoritePoints } = response.data
+
+const distritosWithSortDescriptions = favoriteDistricts.map((info) => {
+  const { distrito } = info
+  return {
+    ...distrito,
+    description: truncateText(distrito.description, { maxWords: 15 })
+  }
+})
+
+const pointsWithShortDescriptions = await Promise.all(
+  favoritePoints.map(async (info) => {
+    const { puntos_de_interes: point } = info
+    const images = await getInterestPointsImages({
+      ...Astro,
+      params: { id: String(point.id) }
+    })
+
+    const distritoInfo = {
+      id: point.distrito_id,
+      name: point.distrito_name ?? ''
+    }
+
+    return {
+      ...point,
+      url: getInterestPointUrl({ point, distrito: distritoInfo }),
+      main_image: images?.at(0)?.url ?? null,
+      images,
+      description: truncateText(point.description ?? 'Sin descripción', {
+        maxWords: 15
+      })
+    }
+  })
+)
+---
+
+<Layout title=`${SITE_NAME} | Favoritos`>
+  <main class="flex flex-col gap-12 px-8 md:px-28 mt-16">
+    <h1 class="font-bold text-3xl">Favoritos</h1>
+    <FavoritePlaces
+      distritos={distritosWithSortDescriptions}
+      points={pointsWithShortDescriptions}
+      client:only="react"
+    />
+  </main>
+</Layout>

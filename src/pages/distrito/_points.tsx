@@ -4,7 +4,6 @@ import type { FilteredPoints } from '@/utils/mappers'
 import CompleteLogo from '@/images/complete-logo.png'
 import type { InterestPointCategoryEnglish } from '@/types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { slugify } from '@/utils/formatter'
 
 interface PointsProps {
   distrito: { id: number; name: string }

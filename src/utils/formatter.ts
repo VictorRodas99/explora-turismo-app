@@ -1,4 +1,4 @@
-import type { InterestPoint, UserRole } from '@/types'
+import type { UserRole } from '@/types'
 import type { CloudinaryResponse } from '../lib/cloudinary/response'
 import { USER_ROLES_SPANISH } from '@/constants'
 

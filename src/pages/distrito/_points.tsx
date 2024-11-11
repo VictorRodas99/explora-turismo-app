@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { truncateText } from '@/utils/formatter'
+import { getInterestPointUrl, truncateText } from '@/utils/formatter'
 import type { FilteredPoints } from '@/utils/mappers'
 import CompleteLogo from '@/images/complete-logo.png'
 import type { InterestPointCategoryEnglish } from '@/types'
@@ -93,7 +93,7 @@ export function SpecificPoint({
         >
           {places.map((point) => (
             <a
-              href={`/puntos/${point.id}/${slugify(distrito.name)}/${slugify(point.name)}?distrito_id=${distrito.id}`}
+              href={getInterestPointUrl({ point, distrito: distrito })}
               key={`${point.name}-${point.id}`}
               className="flex flex-col gap-5 min-w-80 h-[250px] group"
             >

@@ -1,12 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
-import type { getImagesFromResponse } from '@/utils/formatter'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { getImagesFromResponse } from '@/utils/formatter'
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import deepClone from '@/utils/deep-clone'
-
-interface GalleryProps {
-  images: ReturnType<typeof getImagesFromResponse>
-  retrieveError?: string
-}
+import getAssetsFrom from '@/services/client/get-assets'
+import QueryClientProvider from '@/context/tanstack-react-query'
+import { useQuery } from '@tanstack/react-query'
 
 const IMAGE_GALLERY_ID_PREFIX = 'image-gallery'
 
@@ -47,8 +45,52 @@ const imageVariants = {
   }
 }
 
-export default function Gallery({ images, retrieveError }: GalleryProps) {
-  const [displayImages, setDisplayImages] = useState(images?.slice(0, 9) ?? [])
+const skeletonVariants = {
+  initial: {
+    opacity: 0,
+    width: 0,
+    transition: {
+      duration: 0.5
+    }
+  },
+  animate: {
+    opacity: 1,
+    width: '100%',
+    transition: {
+      duration: 0.5
+    }
+  },
+  exit: {
+    opacity: 0,
+    width: 0,
+    transition: {
+      duration: 0.3
+    }
+  }
+}
+
+export default function GalleryContainer() {
+  return (
+    <QueryClientProvider>
+      <Gallery />
+    </QueryClientProvider>
+  )
+}
+
+function Gallery() {
+  const {
+    isPending,
+    error: apiResponseError,
+    data: response
+  } = useQuery({
+    queryKey: ['data'],
+    queryFn: () => getAssetsFrom({ folder: 'galeria' })
+  })
+
+  const [displayImages, setDisplayImages] = useState<
+    NonNullable<ReturnType<typeof getImagesFromResponse>>
+  >([])
+
   const [loadedImagesIndexes, setLoadedImagesIndexes] = useState<Set<number>>(
     new Set()
   )
@@ -57,6 +99,26 @@ export default function Gallery({ images, retrieveError }: GalleryProps) {
   const handleImageLoad = useCallback((imageIndex: number) => {
     setLoadedImagesIndexes((prev) => new Set(prev).add(imageIndex))
   }, [])
+
+  const retrieveError = useMemo(() => {
+    if (response?.error) {
+      return response.error
+    }
+
+    if (apiResponseError) {
+      return apiResponseError.message
+    }
+
+    return null
+  }, [response?.error, apiResponseError])
+
+  useEffect(() => {
+    if (response?.assets) {
+      setDisplayImages(
+        getImagesFromResponse(response.assets)?.slice(0, 9) ?? []
+      )
+    }
+  }, [response?.assets])
 
   useEffect(() => {
     if (retrieveError === 'timeout') {
@@ -139,33 +201,57 @@ export default function Gallery({ images, retrieveError }: GalleryProps) {
       animate={galleryAnimationControl}
     >
       <AnimatePresence>
-        {displayImages.map(({ assetId }, index) => (
-          <motion.div
-            key={assetId}
-            className={`relative rounded-lg overflow-hidden max-h-[100px]
+        {isPending ? (
+          <>
+            {[...Array(9)].map((number, index) => (
+              <motion.div
+                key={`${number}-${index + 1}`}
+                className={`relative rounded-lg overflow-hidden max-h-[100px]
+                ${index === 0 ? 'col-span-2 row-span-2 md:col-span-1 md:row-span-1' : ''}
+                ${index === 1 ? 'col-span-2' : ''}
+                ${index === 4 || index === 5 ? 'row-span-2' : ''}
+                ${index === 6 ? 'col-span-2' : ''}
+              `}
+                variants={skeletonVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+              </motion.div>
+            ))}
+          </>
+        ) : (
+          <>
+            {displayImages.map(({ assetId }, index) => (
+              <motion.div
+                key={assetId}
+                className={`relative rounded-lg overflow-hidden max-h-[100px]
               ${index === 0 ? 'col-span-2 row-span-2 md:col-span-1 md:row-span-1' : ''}
               ${index === 1 ? 'col-span-2' : ''}
               ${index === 4 || index === 5 ? 'row-span-2' : ''}
               ${index === 6 ? 'col-span-2' : ''}
             `}
-            variants={imageVariants}
-          >
-            <motion.div
-              className="absolute inset-0 bg-gray-200"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: loadedImagesIndexes.has(index) ? 0 : 1 }}
-              transition={{ duration: 0.3 }}
-            />
-            <motion.img
-              id={`${IMAGE_GALLERY_ID_PREFIX}-${index}`}
-              alt={`imagen ${index + 1}`}
-              className="w-full h-full object-cover"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: loadedImagesIndexes.has(index) ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-            />
-          </motion.div>
-        ))}
+                variants={imageVariants}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gray-200"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: loadedImagesIndexes.has(index) ? 0 : 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.img
+                  id={`${IMAGE_GALLERY_ID_PREFIX}-${index}`}
+                  alt={`imagen ${index + 1}`}
+                  className="w-full h-full object-cover"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: loadedImagesIndexes.has(index) ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.div>
+            ))}
+          </>
+        )}
       </AnimatePresence>
     </motion.div>
   )

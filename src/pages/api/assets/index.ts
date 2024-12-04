@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes'
 import { getAssetsFromFolder } from '@/lib/cloudinary/assets'
 
 export const POST: APIRoute = async ({ request }) => {
-  const { folder } = await request.json()
+  const { folder, fileNamePattern } = await request.json()
 
   if (!folder) {
     return createErrorResponse({
@@ -16,7 +16,10 @@ export const POST: APIRoute = async ({ request }) => {
     })
   }
 
-  const { error, assets } = await getAssetsFromFolder({ folder })
+  const { error, assets } = await getAssetsFromFolder({
+    folder,
+    fileNamePattern
+  })
 
   if (error) {
     return createErrorResponse({

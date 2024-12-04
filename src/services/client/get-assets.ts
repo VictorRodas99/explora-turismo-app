@@ -2,14 +2,20 @@ import { API_STATES } from '@/pages/api/_states'
 import type { ApiResponse } from '../validations/api-response.zod'
 import type { CloudinaryResponse } from '@/lib/cloudinary/response'
 
-export default async function getAssetsFrom({ folder }: { folder: string }) {
+export default async function getAssetsFrom({
+  folder,
+  fileNamePattern
+}: {
+  folder: string
+  fileNamePattern?: string
+}) {
   if (typeof folder !== 'string') {
     throw new Error('folder param must be of type string')
   }
 
   const response = await fetch('/api/assets/', {
     method: 'POST',
-    body: JSON.stringify({ folder })
+    body: JSON.stringify({ folder, fileNamePattern })
   })
 
   const { statusText, data } = ((await response.json()) as ApiResponse).data

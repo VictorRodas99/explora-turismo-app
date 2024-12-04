@@ -1,6 +1,5 @@
 ---
-import { getImagesFromResponse, slugify, truncateText } from '@/utils/formatter'
-import { getAssetsFromFolder } from '@/lib/cloudinary/assets'
+import { slugify, truncateText } from '@/utils/formatter'
 import Gallery from '@/components/galleries/specific'
 import Layout from '@/layouts/layout.astro'
 
@@ -15,6 +14,7 @@ import { SITE_NAME } from '@/constants'
 import Points from './_points'
 import MapComponent from '@/components/map'
 import PlaceHeader from '@/components/place-header.astro'
+import getAssetsFrom from '@/services/client/get-assets'
 
 const [distrito, interestPoints] = await Promise.all([
   getDistritoById(Astro),
@@ -25,14 +25,12 @@ if (!distrito) {
   return Astro.redirect('/404', 404)
 }
 
-const [filteredPoints, { assets, error }] = await Promise.all([
-  getFilteredInterestPoints(interestPoints),
-  getAssetsFromFolder({
-    folder: `${slugify(distrito.name)}/galeria`
-  })
-])
+const filteredPoints = await getFilteredInterestPoints(interestPoints)
+// getAssetsFromFolder({
+//   folder: `${slugify(distrito.name)}/galeria`
+// })
 
-const images = getImagesFromResponse(assets)
+// const images = getImagesFromResponse(assets)
 
 const { id, name, description } = distrito
 const shortDescription = truncateText(description, { maxWords: 66 })
@@ -42,7 +40,10 @@ const shortDescription = truncateText(description, { maxWords: 66 })
   <main class="flex flex-col gap-12 mt-20 py-8 md:py-12 px-8 md:px-28 lg:px-32">
     <section class="flex flex-col gap-7">
       <PlaceHeader place={{ type: 'distrito', ...distrito }} />
-      <Gallery images={images} retrieveError={error} client:only="react" />
+      <Gallery
+        queryArgs={{ folder: `${slugify(distrito.name)}/galeria` }}
+        client:only="react"
+      />
     </section>
     <div class="flex flex-col md:flex-row-reverse gap-10">
       <aside class="md:w-[40%]">

@@ -16,6 +16,7 @@ import WrongInfoBreadcrumb from '@/components/wrong-info-breadcrumb'
 import ShowMoreDescription from '@/pages/distrito/_show-more-description-dialog'
 import { SpecificPoint } from '@/pages/distrito/_points'
 import { getDistritoById } from '@/services/server/distritos'
+import { slugify } from '@/utils/formatter'
 
 const place = await usePointData(Astro)
 
@@ -25,13 +26,11 @@ if (!place) {
 
 const {
   point,
-  images,
-  error,
   contacts,
   description,
   shortDescription,
   similarPoints,
-  distritoId
+  distrito: distritoPadre
 } = place
 
 const MainPlaceIcon = getIconForPlaceType({
@@ -40,7 +39,7 @@ const MainPlaceIcon = getIconForPlaceType({
 
 const distrito = await getDistritoById({
   ...Astro,
-  params: { id: String(distritoId) }
+  params: { id: String(distritoPadre.id) }
 })
 
 const filteredPointsWithImages = await getFilteredInterestPoints(similarPoints)
@@ -52,14 +51,16 @@ const filteredPointsWithImages = await getFilteredInterestPoints(similarPoints)
       <PlaceHeader
         place={{
           type: 'punto',
-          main_image: images?.at(0)?.url ?? null,
+          main_image: null,
           distrito: { id: Number(distrito?.id), name: String(distrito?.name) },
           ...place.point
         }}
       />
       <Gallery
-        images={images ?? null}
-        retrieveError={error}
+        queryArgs={{
+          folder: distritoPadre.slugifiedName ?? '',
+          fileNamePattern: slugify(point.name)
+        }}
         client:only="react"
       />
     </section>
@@ -109,7 +110,10 @@ const filteredPointsWithImages = await getFilteredInterestPoints(similarPoints)
             <section class="flex flex-col gap-7 py-10 border-b border-gray-300 overflow-hidden">
               {Object.values(filteredPointsWithImages).map((points) => (
                 <SpecificPoint
-                  distrito={{ name: distrito?.name ?? '', id: distritoId }}
+                  distrito={{
+                    name: distrito?.name ?? '',
+                    id: distritoPadre.id
+                  }}
                   subject={`Lugares similares en el Distrito`}
                   places={points}
                   type={getInterestPointCategoryInEnglish(point.tipo)}

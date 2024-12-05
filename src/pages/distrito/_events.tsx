@@ -13,7 +13,7 @@ import useCalendar from './hooks/use-calendar'
 import { API_STATES } from '../api/_states'
 import Calendar from 'react-calendar'
 import type { Event } from '@/types'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import './css/_calendar.css'
 import { getRemanentDays } from '@/utils/general'
 import { cn } from '@/utils/cn'
@@ -59,7 +59,7 @@ function RemainingDays({
 
 function Events({ distritoId }: { distritoId: number }) {
   const { isPending, data: response } = useQuery({
-    queryKey: ['data'],
+    queryKey: ['events'],
     queryFn: () =>
       fetch(`/api/eventos/${distritoId}`).then((response) => response.json())
   })
@@ -74,22 +74,28 @@ function Events({ distritoId }: { distritoId: number }) {
   } = useCalendar(new Date())
 
   const eventsDates = useMemo(() => {
-    if (!response) {
-      return null
+    if (response?.data) {
+      const { data: events } = response.data
+      return getParsedEventsDates(events)
     }
 
-    const { data: events } = response.data
-    return getParsedEventsDates(events)
+    return null
   }, [response])
 
-  if (isPending && !response) {
+  const { statusText, data: events } = useMemo(() => {
+    if (!response || !response?.data) {
+      return { statusText: '', data: null }
+    }
+
+    return response.data as {
+      statusText: string
+      data: Event[] | null
+    }
+  }, [response])
+
+  if (isPending) {
     return <p>Cargando...</p>
   }
-
-  const { statusText, data: events } = (response?.data as {
-    statusText: string
-    data: Event[] | null
-  }) || { statusText: '', data: null }
 
   if (statusText === API_STATES.error) {
     return null

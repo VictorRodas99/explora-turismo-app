@@ -43,7 +43,7 @@ function Gallery({ queryArgs }: GalleryProps) {
   const SWIPE_COOLDOWN = 300
 
   const { isPending, data: response } = useQuery({
-    queryKey: ['data'],
+    queryKey: ['place-images'],
     queryFn: () => getAssetsFrom(queryArgs)
   })
 

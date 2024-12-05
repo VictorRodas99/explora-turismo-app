@@ -83,7 +83,7 @@ function Gallery() {
     error: apiResponseError,
     data: response
   } = useQuery({
-    queryKey: ['data'],
+    queryKey: ['hero-images'],
     queryFn: () => getAssetsFrom({ folder: 'galeria' })
   })
 
